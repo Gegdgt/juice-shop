@@ -26,7 +26,7 @@ Consultadas durante la preparación del 15–16 de noviembre de 2026. Las fuente
 | [Docker: publicación de puertos](https://docs.docker.com/engine/network/port-publishing/) | Diferencia entre puerto interno y publicación loopback |
 | [Docker Compose: redes](https://docs.docker.com/compose/how-tos/networking/) | DNS de servicios y redes |
 | [Docker Desktop Windows](https://docs.docker.com/desktop/setup/install/windows-install/) | Requisitos del entorno |
-| [PASTA — VerSprite](https://versprite.com/cybersecurity-listings/devsecops/pasta-threat-modeling/) | Etapas y análisis orientado al impacto; H1 aplica solo I–IV |
+| [PASTA — VerSprite](https://versprite.com/cybersecurity-listings/devsecops/pasta-threat-modeling/) | Etapas y análisis orientado al impacto; H1 aplica I–V |
 | [OWASP Threat Modeling](https://owasp.org/www-community/Threat_Modeling) | Descomposición, amenazas y controles |
 | [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) | Referencia para requisitos de autenticación, autorización, sesiones e inyecciones |
 | [GitHub: fork](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo) | Migración conservando upstream |
@@ -43,3 +43,10 @@ Consultadas durante la preparación del 15–16 de noviembre de 2026. Las fuente
 copiar entregables al fork, fusionar documentación y exclusiones, adaptar los
 scripts y verificar Docker/HTTP/WAF, hashes y enlaces. No realizó commit/push
 ni cambió los ajustes remotos de Actions. La revisión humana sigue pendiente.
+
+**Asistencia en la etapa V y los controles (16 de noviembre de 2026):** Claude
+(Anthropic, modelo Claude Fable 5.2) leyó el código del fork y redactó la
+[etapa V](03b-PASTA-5-Vulnerabilidades.md) y la tabla de controles por
+requisito, corrigió los datos de integrantes y adaptó el entorno `waf-siem/`
+del curso a Juice Shop. No ejecutó Docker, ataques, commits ni push. La
+revisión humana sigue pendiente.

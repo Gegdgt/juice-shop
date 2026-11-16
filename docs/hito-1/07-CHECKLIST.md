@@ -7,7 +7,7 @@
 - [x] Directorio, estado inicial, remoto y rama inspeccionados antes de modificar; README original y kit conservados.
 - [x] Destino `Gegdgt/juice-shop` público, `fork=true`, padre `juice-shop/juice-shop` y rama principal `master` comprobados.
 - [x] Gegdgt (Red) y Sebas Juárez (Blue) documentados.
-- [ ] Confirmar los cuatro integrantes y distribución final de roles.
+- [x] Grupo de dos integrantes: un Red Team y un Blue Team.
 - [x] Entregables integrados localmente en `hito-1-integracion`, basada en `origin/master`.
 - [x] Los 16 YAML oficiales de workflows se conservan sin cambios.
 - [ ] Deshabilitar Actions en el fork antes de publicar y verificar `enabled=false`; actualmente la API devuelve `enabled=true` y cero workflows enumerados.
@@ -24,6 +24,8 @@
 - [x] PASTA III: entidades, procesos, SQLite/MarsDB, logs, flujos y LC-01 a LC-04 consistentes con Compose/código.
 - [x] DOT/PNG/SVG actualizados; PNG revisado visualmente y exportaciones generadas desde el mismo DOT.
 - [x] PASTA IV: 16 amenazas por componente con activo, impacto, mitigación y requisito; seis categorías STRIDE.
+- [x] PASTA V: 10 debilidades identificadas por lectura de código, con CWE, amenaza y relación con el DFD; sin explotación.
+- [x] Cada requisito indica el control que lo comprueba (pipeline, regla de Kibana o WAF).
 - [x] 13 requisitos con criterio observable y estado real/propuesto.
 - [x] 12 casos con precondiciones, Dado/Cuando/Entonces, resultado esperado y método de verificación.
 - [x] Referencias T-xx ↔ RS-xx ↔ CA-xx comprobadas automáticamente.
@@ -51,7 +53,7 @@
 - [x] Borrador de declaración de asistencia IA preparado.
 - [ ] Adaptar declaración a la guía oficial UVG y contrastar la rúbrica completa.
 - [ ] Tomar/revisar capturas reales y completar sus metadatos.
-- [ ] Revisar cambios y publicar en el fork solo con autorización explícita; sin commit ni push en esta ejecución.
+- [ ] Fusionar `hito-1-integracion` en `master` después de la revisión conjunta.
 - [ ] Instalar dependencias locales y repetir `npm run lint` y `npm test` antes del commit: intentados, detenidos por ausencia de `eslint` y `ng`.
 
 ## Repetir validación

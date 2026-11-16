@@ -21,7 +21,7 @@ El trabajo cubre diseño, implementación verificable del laboratorio, pruebas y
 
 | Hito | Alcance previsto | Estado |
 |---|---|---|
-| H1 | PASTA 1–4, STRIDE, requisitos, casos de abuso y reconocimiento | Preparado y validado técnicamente; faltan cierre académico y capturas |
+| H1 | PASTA 1–5, STRIDE, requisitos, casos de abuso y reconocimiento | Preparado y validado técnicamente; faltan cierre académico y capturas |
 | H2 | Validación de vulnerabilidades, PoC y análisis de código/dependencias según consigna | No iniciado |
 | H3 | Defensa, integración SIEM y ajuste de detección/bloqueo | No iniciado; sin Elasticsearch ni Kibana |
 | H4 | Integración y entrega final | No iniciado; confirmar detalle en la rúbrica original |
@@ -34,8 +34,6 @@ La rúbrica y la guía de IA de UVG no fueron suministradas. El checklist se bas
 |---|---|---|
 | Gegdgt, propietario del repositorio | Red Team | Reconocimiento, inventario de entradas, hipótesis y evidencias |
 | Sebas Juárez | Blue Team | Arquitectura, WAF, límites de confianza y controles |
-| Por confirmar | Segundo Red Team | Apoyar reconocimiento y revisión |
-| Por confirmar | Segundo Blue Team | Apoyar controles y revisión |
 
 ## Arquitectura
 

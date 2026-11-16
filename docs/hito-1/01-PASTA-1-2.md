@@ -28,7 +28,7 @@
 | Proxy/WAF | ModSecurity + OWASP CRS, contenedor local | Sí | Recibe solicitudes en `127.0.0.1:8081`; comienza en `DetectionOnly` |
 | Backend | Node.js / Express / REST, contenedor Juice Shop | Sí | Servicio `juice-shop:3000` accesible desde la red Docker; no se publica directamente en el host |
 | Datos internos | SQLite + colecciones MarsDB dentro de Juice Shop | Sí | `models/index.ts:42`: `data/juiceshop.sqlite`; `data/mongodb.ts:9–10`: reseñas y pedidos. Sin servicio DB separado ni persistencia garantizada |
-| Control de versiones | Fork público `Gegdgt/juice-shop`, rama principal `master` | Sí | Código oficial en la raíz; H1 integrado localmente en `hito-1-integracion`, publicación pendiente |
+| Control de versiones | Fork público `Gegdgt/juice-shop`, rama principal `master` | Sí | Código oficial en la raíz; H1 en la rama `hito-1-integracion`, fusión a `master` pendiente |
 | SIEM / Filebeat / Kibana | Fase H3 | Futuro | No aparece como componente operativo en el DFD H1 |
 | SAST / SCA / DAST / SBOM | Fase H2 | Futuro | No confundir requisitos deseados con controles que ya funcionan |
 | Servicio público y universidad | Infraestructura de terceros | **No** | Fuera de alcance y prohibido hacer pruebas |

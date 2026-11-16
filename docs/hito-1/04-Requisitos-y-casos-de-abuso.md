@@ -20,6 +20,26 @@ Requisitos de diseño con criterios de aceptación. La aplicación permanece int
 | RS-12 | Fijar imágenes reproducibles | Ambas referencias incluyen @sha256 de 64 dígitos y coinciden con las imágenes desplegadas; repetir evaluación al cambiarlas | H1 verificado |
 | RS-13 | Validar entradas de consultas documentales | Esquema permite solo campos/tipos previstos; operadores inesperados se rechazan con 400 sin modificar documentos ajenos | H2 · propuesto |
 
+## Control que comprueba cada requisito (Equipo azul)
+
+Para cada requisito, qué control lo va a comprobar (pipeline, regla de Kibana o WAF) y cómo se verá en los hitos siguientes. Donde el WAF no puede ver el problema, se dice. Las debilidades V-xx están en la [etapa V](03b-PASTA-5-Vulnerabilidades.md).
+
+| ID | Amenaza que cubre | Control que lo comprueba | Cómo se comprueba después |
+|---|---|---|---|
+| RS-01 | T-05 | Regla de Kibana | H3: consulta sobre `waf-access` que cuenta los POST a `/rest/user/login` por IP. El CRS no limita intentos por sí solo |
+| RS-02 | T-06, T-10 | Pipeline (prueba de regresión) | H2: PoC del Red Team con dos cuentas (V-03). H4: prueba que falla antes de la corrección y pasa después. El WAF no lo ve: es una petición válida con un ID ajeno |
+| RS-03 | T-07 | Pipeline (Semgrep), regla de Kibana y WAF | H2: revisar qué reporta Semgrep en `routes/search.ts` y `routes/login.ts` (V-01, V-02). H3: regla `DET-01` (CRS 942*) y 403 con el WAF en modo On |
+| RS-04 | T-08 | Regla de Kibana y WAF; pipeline (ZAP baseline) | H3: regla `DET-02` (CRS 941*) y 403 en modo On, solo para el XSS que llega al servidor (V-04). H2: el baseline de ZAP reporta cabeceras y CSP. El XSS en el DOM (V-06) queda fuera del WAF |
+| RS-05 | T-03 | Regla de Kibana | H3: regla `DET-03` de ráfagas o escaneo por IP sobre `waf-access`, más los eventos 913* del CRS |
+| RS-06 | T-04, T-12, T-13 | Kibana (revisión de eventos) | H3: los eventos `waf-audit` llegan a `filebeat-*` con hora, ruta y regla. Se revisa una muestra para confirmar que solo aparecen cuentas de prueba |
+| RS-07 | T-02, T-09 | Pipeline (prueba de regresión) | H2: PoC si el Red Team lo elige. H4: prueba sobre el total del pedido. El WAF no valida lógica de negocio |
+| RS-08 | T-14 | WAF y Compose | H0 y H3: en Postman, «Health directo a la app» falla y el health por el WAF da 200. `docker compose ps` no muestra el puerto 3000 publicado |
+| RS-09 | T-11 | Pipeline (prueba de regresión) | H2: PoC con cuenta normal contra una operación de administración. H4: prueba de rol. Apoyo en Kibana: accesos a `/rest/admin/` en `waf-access` |
+| RS-10 | T-01, T-12, T-15 | Pipeline (Semgrep) | H2: reglas de secretos de Semgrep sobre el repositorio y revisión del diff antes de cada push. H4: se repite sobre el código generado con IA |
+| RS-11 | T-01 | Pipeline (prueba de regresión) | H4, si se corrige V-09: prueba con token vencido o invalidado que espera 401. El WAF no conoce el estado de la sesión |
+| RS-12 | T-15 | Pipeline (SBOM con Syft) y revisión de Compose | H2: el SBOM queda como artefacto del pipeline. Pendiente: fijar por digest las imágenes de `waf-siem/`, como ya está en `entorno-blue-team/` |
+| RS-13 | T-16 | Regla de Kibana y WAF; pipeline (Semgrep) | H3: eventos 942* del CRS con operadores NoSQL. H2: revisar qué reporta Semgrep en `routes/trackOrder.ts` y `routes/showProductReviews.ts` (V-04, V-05) |
+
 ## Casos de abuso
 
 Todos se diseñan en H1. Los ensayos ofensivos requieren alcance y autorización del hito posterior.

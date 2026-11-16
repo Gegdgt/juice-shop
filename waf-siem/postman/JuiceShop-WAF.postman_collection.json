@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "JuiceShop-WAF",
+    "description": "Proyecto Final Integrador. Todo el tráfico va por el WAF (http://localhost:8080) hacia Juice Shop. Solo instancia local y cuentas de prueba.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. Verificacion",
+      "item": [
+        {
+          "name": "Health a traves del WAF (debe dar 200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/rest/admin/application-version",
+            "description": "Si da 502, el WAF no llega a Juice Shop: revisen que el servicio app esté arriba (docker compose ps)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 por el WAF', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health directo a la app (saltando el WAF)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url_directo}}/rest/admin/application-version",
+            "description": "Con la opción B debe FALLAR (conexión rechazada): el puerto 3000 no está publicado. Si da 200, la app está expuesta y es un hallazgo."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Trafico legitimo",
+      "item": [
+        {
+          "name": "Login (guarda el token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/rest/user/login",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jim@juice-sh.op\",\n  \"password\": \"ncc-1701\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));",
+                  "const a = pm.response.json().authentication;",
+                  "pm.environment.set('token', a.token);",
+                  "pm.environment.set('bid', a.bid);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar productos (termino normal)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/rest/products/search?q=apple",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver mi carrito (usa el token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{base_url}}/rest/basket/{{bid}}",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Ataques (pega tu PoC confirmado en Burp)",
+      "item": [
+        {
+          "name": "SQLi en el login (V-02)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/rest/user/login",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{poc_sqli_login}}\",\n  \"password\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "SQLi en la busqueda de productos (V-01)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/rest/products/search?q={{poc_busqueda}}",
+            "description": ""
+          }
+        },
+        {
+          "name": "XSS en el rastreo de orden (V-04, requiere NODE_ENV=unsafe)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/rest/track-order/{{poc_track_order}}",
+            "description": "Con el modo seguro de Docker la app limpia el id y el XSS no se explota. Ver docs/hito-1/03b-PASTA-5-Vulnerabilidades.md."
+          }
+        },
+        {
+          "name": "IDOR: carrito de otro usuario (V-03)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{base_url}}/rest/basket/{{poc_basket_ajeno}}",
+            "description": "Usa el token del login legítimo contra el id de un carrito que no es suyo. El WAF no lo distingue de una petición normal."
+          }
+        },
+        {
+          "name": "Metodo no permitido (PROPFIND) - prueba del modo On",
+          "request": {
+            "method": "PROPFIND",
+            "header": [],
+            "url": "{{base_url}}/rest/products/search",
+            "description": "En DetectionOnly responde la app. En modo On el WAF responde 403 (regla 911100)."
+          }
+        }
+      ]
+    }
+  ]
+}

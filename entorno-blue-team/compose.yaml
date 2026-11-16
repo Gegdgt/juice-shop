@@ -1,0 +1,55 @@
+# Entorno local de H1: solo el WAF se expone al host en loopback.
+# Para H3 se agregaran la recoleccion y visualizacion de logs.
+name: juiceshop-h1
+services:
+  juice-shop:
+    image: bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - interna
+    healthcheck:
+      test: ["CMD", "/nodejs/bin/node", "-e", "require('http').get('http://127.0.0.1:3000/',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  waf:
+    image: owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164
+    restart: unless-stopped
+    depends_on:
+      juice-shop:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8081:8080"
+    environment:
+      BACKEND: "http://juice-shop:3000"
+      PORT: "8080"
+      SERVER_NAME: "localhost"
+      MODSEC_RULE_ENGINE: "DetectionOnly"
+      MODSEC_AUDIT_ENGINE: "On"
+      MODSEC_AUDIT_LOG: "/dev/stdout"
+      MODSEC_AUDIT_LOG_FORMAT: "JSON"
+      MODSEC_AUDIT_LOG_PARTS: "AHZ"
+    networks:
+      - interna
+      - entrada
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  interna:
+    driver: bridge
+    internal: true
+  entrada:
+    driver: bridge

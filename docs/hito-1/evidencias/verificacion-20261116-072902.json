@@ -1,0 +1,439 @@
+{
+  "fecha": "2026-11-16T07:29:00-06:00",
+  "destino_autorizado": "http://127.0.0.1:8081",
+  "metodo": "Inspección Docker, lectura de código empaquetado y GET normales sin cookies. No se guardan cuerpos ni cabeceras sensibles.",
+  "comandos": [
+    {
+      "fecha": "2026-11-16T07:29:00-06:00",
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (fetch)\norigin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (push)",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:00-06:00",
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "main",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:00-06:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "1a2f3b8146b2198710464e336ee0217f24d1484b",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:00-06:00",
+      "argv": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .}}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"Client\":{\"Version\":\"29.8.1\",\"ApiVersion\":\"1.56\",\"DefaultAPIVersion\":\"1.56\",\"GitCommit\":\"4a63305\",\"GoVersion\":\"go1.26.8\",\"Os\":\"windows\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Sep 15 16:28:39 2026\",\"Context\":\"desktop-linux\"},\"Server\":{\"Platform\":{\"Name\":\"Docker Desktop 4.93.0 (240920)\"},\"Version\":\"29.8.1\",\"ApiVersion\":\"1.56\",\"MinAPIVersion\":\"1.40\",\"Os\":\"linux\",\"Arch\":\"amd64\",\"Components\":[{\"Name\":\"Engine\",\"Version\":\"29.8.1\",\"Details\":{\"ApiVersion\":\"1.56\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Sep 15 16:25:38 2026\",\"Experimental\":\"false\",\"GitCommit\":\"464cd50\",\"GoVersion\":\"go1.26.8\",\"KernelVersion\":\"6.6.87.2-microsoft-standard-WSL2\",\"MinAPIVersion\":\"1.40\",\"Module\":\"github.com/moby/moby/v2\",\"ModuleVersion\":\"v2.0.0+unknown\",\"Os\":\"linux\"}},{\"Name\":\"containerd\",\"Version\":\"v2.3.5\",\"Details\":{\"GitCommit\":\"1294c24a7da8e5a793ed378161673abe94118892\"}},{\"Name\":\"runc\",\"Version\":\"1.5.1\",\"Details\":{\"GitCommit\":\"v1.5.1-0-g8f2685a4\"}},{\"Name\":\"docker-init\",\"Version\":\"0.19.0\",\"Details\":{\"GitCommit\":\"de40ad0\"}}],\"GitCommit\":\"464cd50\",\"GoVersion\":\"go1.26.8\",\"KernelVersion\":\"6.6.87.2-microsoft-standard-WSL2\",\"BuildTime\":\"2026-09-15T16:25:38.000000000+00:00\"}}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:00-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "Docker Compose version v5.5.1",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:01-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config"
+      ],
+      "exit_code": 0,
+      "stdout": "name: juiceshop-h1\nservices:\n  juice-shop:\n    expose:\n      - \"3000\"\n    healthcheck:\n      test:\n        - CMD\n        - /nodejs/bin/node\n        - -e\n        - require('http').get('http://127.0.0.1:3000/',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))\n      timeout: 5s\n      interval: 15s\n      retries: 10\n      start_period: 1m0s\n    image: bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      interna: null\n    restart: unless-stopped\n  waf:\n    depends_on:\n      juice-shop:\n        condition: service_healthy\n        required: true\n    environment:\n      BACKEND: http://juice-shop:3000\n      MODSEC_AUDIT_ENGINE: 'On'\n      MODSEC_AUDIT_LOG: /dev/stdout\n      MODSEC_AUDIT_LOG_FORMAT: JSON\n      MODSEC_AUDIT_LOG_PARTS: AHZ\n      MODSEC_RULE_ENGINE: DetectionOnly\n      PORT: \"8080\"\n      SERVER_NAME: localhost\n    image: owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      entrada: null\n      interna: null\n    ports:\n      - mode: ingress\n        host_ip: 127.0.0.1\n        target: 8080\n        published: \"8081\"\n        protocol: tcp\n    restart: unless-stopped\nnetworks:\n  entrada:\n    name: juiceshop-h1_entrada\n    driver: bridge\n  interna:\n    name: juiceshop-h1_interna\n    driver: bridge\n    internal: true",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:01-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "ps",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"Command\":\"\\\"/nodejs/bin/node /j…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:08 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"66ff4d7ae988\",\"Image\":\"bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\",\"Labels\":\"org.opencontainers.image.licenses=MIT,org.opencontainers.image.title=OWASP Juice Shop,com.docker.compose.config-hash=772725dff021d666ce241fb031a9fe1bef5ad11c912a15d38be0dc4ca2cd10ee,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,com.docker.compose.version=5.5.1,maintainer=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e,org.opencontainers.image.description=Probably the most modern and sophisticated insecure web application,org.opencontainers.image.documentation=https://help.owasp-juice.shop,org.opencontainers.image.source=https://github.com/juice-shop/juice-shop,com.docker.compose.image=sha256:aeb28af19303bb9e0437c2c82b5ab223bc8da56dc73472343be04aacca7e3143,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,org.opencontainers.image.created=”2026-11-08T19:09:22Z”,org.opencontainers.image.url=https://owasp-juice.shop,org.opencontainers.image.vendor=Open Worldwide Application Security Project,org.opencontainers.image.version=20.4.0-SNAPSHOT,com.docker.compose.container-number=1,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,com.docker.compose.replace=juice-shop-1,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.revision=266448a,com.docker.compose.project=juiceshop-h1,com.docker.compose.service=juice-shop,org.opencontainers.image.authors=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-juice-shop-1\",\"Names\":\"juiceshop-h1-juice-shop-1\",\"Networks\":\"juiceshop-h1_interna\",\"Ports\":\"3000/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":3000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"8 hours ago\",\"Service\":\"juice-shop\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 18 seconds (healthy)\"}\n{\"Command\":\"\\\"/docker-entrypoint.…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:54 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"starting\",\"ID\":\"977db99d12ec\",\"Image\":\"owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\",\"Labels\":\"com.docker.compose.service=waf,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/8080/tcp=127.0.0.1:8081,com.docker.compose.image=sha256:05b5748b24ecdb643de562381a46732163baf54796689c8345e3082b6f241862,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,org.opencontainers.image.source=https://github.com/coreruleset/modsecurity-crs-docker,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,com.docker.compose.version=5.5.1,maintainer=Felipe Zipitria \\u003cfelipe.zipitria@owasp.org\\u003e,com.docker.compose.project=juiceshop-h1,com.docker.compose.config-hash=d2d6128edf5c1cf18d09b429c2189b9426245c5a1b21d1943a2ed9b2e47bd1d5,com.docker.compose.container-number=1,com.docker.compose.depends_on=juice-shop:service_healthy:false,com.docker.compose.oneoff=False,com.docker.compose.replace=waf-1\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-waf-1\",\"Names\":\"juiceshop-h1-waf-1\",\"Networks\":\"juiceshop-h1_entrada,juiceshop-h1_interna\",\"Ports\":\"127.0.0.1:8081-\\u003e8080/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8080,\"PublishedPort\":8081,\"Protocol\":\"tcp\"}],\"RunningFor\":\"8 hours ago\",\"Service\":\"waf\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 18 seconds (health: starting)\"}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:01-06:00",
+      "argv": [
+        "docker",
+        "inspect",
+        "juiceshop-h1-juice-shop-1",
+        "juiceshop-h1-waf-1",
+        "--format",
+        "{{json .Name}} {{json .State.Status}} {{json .NetworkSettings.Ports}} {{json .HostConfig.PortBindings}}"
+      ],
+      "exit_code": 0,
+      "stdout": "\"/juiceshop-h1-juice-shop-1\" \"running\" {\"3000/tcp\":null} {}\n\"/juiceshop-h1-waf-1\" \"running\" {\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"8081\"}]} {\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"8081\"}]}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:01-06:00",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "juiceshop-h1_interna",
+        "--format",
+        "{{json .Internal}} {{json .Containers}}"
+      ],
+      "exit_code": 0,
+      "stdout": "true {\"66ff4d7ae988e3e902f7ae668fbc6d9976cbbb5f52b799e6cb032f86fd789301\":{\"Name\":\"juiceshop-h1-juice-shop-1\",\"EndpointID\":\"f9f952402711009790122472d1464eab3ac08bc95500476c9a81682460b4c388\",\"MacAddress\":\"02:06:1e:98:25:97\",\"IPv4Address\":\"172.20.0.2/16\",\"IPv6Address\":\"\"},\"977db99d12ec5ae4d9dceb30fb264e2f0392a1edead5555664e9f6f2579b8969\":{\"Name\":\"juiceshop-h1-waf-1\",\"EndpointID\":\"7d82a80d7fb4c9c50834668d5dbee685ab2e61f1b54915aeee2fba25e94c63b0\",\"MacAddress\":\"12:46:aa:e9:b8:74\",\"IPv4Address\":\"172.20.0.3/16\",\"IPv6Address\":\"\"}}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:01-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-t"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Syntax OK"
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-M"
+      ],
+      "exit_code": 0,
+      "stdout": "Loaded Modules:\n core_module (static)\n so_module (static)\n http_module (static)\n mpm_event_module (shared)\n authn_file_module (shared)\n authn_core_module (shared)\n authz_host_module (shared)\n authz_groupfile_module (shared)\n authz_user_module (shared)\n authz_core_module (shared)\n access_compat_module (shared)\n auth_basic_module (shared)\n socache_shmcb_module (shared)\n reqtimeout_module (shared)\n filter_module (shared)\n mime_module (shared)\n log_config_module (shared)\n env_module (shared)\n headers_module (shared)\n unique_id_module (shared)\n setenvif_module (shared)\n version_module (shared)\n remoteip_module (shared)\n proxy_module (shared)\n proxy_http_module (shared)\n ssl_module (shared)\n http2_module (shared)\n unixd_module (shared)\n status_module (shared)\n autoindex_module (shared)\n dir_module (shared)\n alias_module (shared)\n rewrite_module (shared)\n security2_module (shared)",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "cat",
+        "/etc/modsecurity.d/modsecurity.conf",
+        "/etc/modsecurity.d/modsecurity-override.conf"
+      ],
+      "exit_code": 0,
+      "stdout": "SecRuleEngine ${MODSEC_RULE_ENGINE}\nSecRequestBodyAccess ${MODSEC_REQ_BODY_ACCESS}\nSecRequestBodyLimit ${MODSEC_REQ_BODY_LIMIT}\nSecRequestBodyNoFilesLimit ${MODSEC_REQ_BODY_NOFILES_LIMIT}\nSecRequestBodyLimitAction ${MODSEC_REQ_BODY_LIMIT_ACTION}\nSecRequestBodyJsonDepthLimit ${MODSEC_REQ_BODY_JSON_DEPTH_LIMIT}\nSecResponseBodyAccess ${MODSEC_RESP_BODY_ACCESS}\nSecResponseBodyMimeType ${MODSEC_RESP_BODY_MIMETYPE}\nSecResponseBodyLimit ${MODSEC_RESP_BODY_LIMIT}\nSecResponseBodyLimitAction ${MODSEC_RESP_BODY_LIMIT_ACTION}\nSecAuditEngine ${MODSEC_AUDIT_ENGINE}\nSecAuditLogRelevantStatus \"${MODSEC_AUDIT_LOG_RELEVANT_STATUS}\"\nSecAuditLogParts ${MODSEC_AUDIT_LOG_PARTS}\nSecAuditLogType ${MODSEC_AUDIT_LOG_TYPE}\nSecAuditLog ${MODSEC_AUDIT_LOG}\nSecAuditLogFormat ${MODSEC_AUDIT_LOG_FORMAT}\nSecAuditLogStorageDir ${MODSEC_AUDIT_STORAGE_DIR}",
+      "stderr": "",
+      "seleccion": "Solo directivas de motor/auditoría/cuerpos, sin comentarios."
+    }
+  ],
+  "http": [
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 9984,
+      "sha256": "7a077ea089234d5fb7e9f5775a384573ec97da96d8c74aaf230984fc723fe48b",
+      "server": "Apache",
+      "contiene_juice_shop": true
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/robots.txt",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 28,
+      "sha256": "09f7c2328189ecdd2e687cccdafb34a16b3d2166f50f0a7962ed4de5b3aaf696",
+      "server": "Apache",
+      "contenido_publico": "User-agent: *\nDisallow: /ftp"
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/products/search?q=apple",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 1617,
+      "sha256": "9c0ae90a41201712bbea8727bdbf8e3506176ec8f6873083c0af1dde6e277beb",
+      "server": "Apache",
+      "claves_raiz": [
+        "status",
+        "data"
+      ],
+      "numero_elementos": 3,
+      "campos_primer_elemento": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "deluxePrice",
+        "image",
+        "alternateImages",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+      ]
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/user/whoami",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 11,
+      "sha256": "e436ef2b7de06788f8fc4b305c0a08d3ab7ee580ec3c1057cc9f3fdeac867081",
+      "server": "Apache",
+      "claves_raiz": [
+        "user"
+      ]
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/languages",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 4349,
+      "sha256": "920aae518ec0ab1093840e7ee7cebcce3f2dce2b93fc0097283fdc908a4b8186",
+      "server": "Apache",
+      "claves_raiz": [
+        "array"
+      ]
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/captcha",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 46,
+      "sha256": "5bf3740e04f3e79529bab9f136eb85ded32a28d5a9aaa6c0d333bd904e72987a",
+      "server": "Apache",
+      "claves_raiz": [
+        "captchaId",
+        "captcha",
+        "answer"
+      ]
+    },
+    {
+      "fecha": "2026-11-16T07:29:02-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/admin/application-version",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 29,
+      "sha256": "bdb6a0e5bff93979edc9a4ffe63c61d3b6ede71861c5f92ed6f567350ab5904d",
+      "server": "Apache",
+      "claves_raiz": [
+        "version"
+      ]
+    }
+  ],
+  "codigo": {
+    "fecha": "2026-11-16T07:29:02-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "exec",
+      "-T",
+      "juice-shop",
+      "/nodejs/bin/node",
+      "-e",
+      "const fs=require('fs'),crypto=require('crypto');\nconst specs={\n 'server.ts':/app\\.(get|post|put|delete|use)\\(['\\\"]\\/(rest\\/(user\\/login|user\\/whoami|products\\/search|basket|order-history|track-order|captcha|languages|admin\\/application-version)|api\\/(BasketItems|Users|Feedbacks))|sequelize\\.sync|nosql|new finale/i,\n 'models/index.ts':/sqlite|storage|Sequelize/,\n 'lib/insecurity.ts':/jwt\\.sign|expiresIn|Authorization|Bearer/,\n 'data/mongodb.ts':/mars|Collection|orders|reviews/,\n 'routes/search.ts':/req\\.query|sequelize\\.query/,\n 'routes/login.ts':/authentication:|bid: basket.id|models.sequelize.query/,\n 'frontend/src/app/app.routing.ts':/path:.*(login|register|search|basket|order|contact)/,\n 'frontend/src/app/Services/basket.service.ts':/this\\.http|quantity|ProductId|BasketId/,\n 'frontend/src/app/Services/user.service.ts':/this\\.http|login|email|password/};\nconst out={version:require('./package.json').version,node:process.version,files:[]};\nfor(const [p,re] of Object.entries(specs)){if(fs.existsSync(p)){const s=fs.readFileSync(p,'utf8');out.files.push({path:p,sha256:crypto.createHash('sha256').update(s).digest('hex'),lines:s.split('\\n').flatMap((v,i)=>re.test(v)?[{line:i+1,text:v}]:[])});}else{out.files.push({path:p,estado:'No existe en esta imagen'});}}\nconsole.log(JSON.stringify(out));"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"version\":\"20.4.0-SNAPSHOT\",\"node\":\"v24.22.2\",\"files\":[{\"path\":\"server.ts\",\"sha256\":\"5f3407f2706724c6192e440d7bfbb73191178b2bc128aae77e1e950c7dcef4e1\",\"lines\":[{\"line\":388,\"text\":\"  app.use('/rest/basket', security.isAuthorized(), security.appendUserId())\"},{\"line\":390,\"text\":\"  app.use('/api/BasketItems', security.isAuthorized())\"},{\"line\":391,\"text\":\"  app.use('/api/BasketItems/:id', security.isAuthorized())\"},{\"line\":393,\"text\":\"  app.use('/api/Feedbacks/:id', security.isAuthorized())\"},{\"line\":395,\"text\":\"  app.get('/api/Users', security.isAuthorized())\"},{\"line\":431,\"text\":\"  app.use('/rest/basket/:id', security.isAuthorized())\"},{\"line\":432,\"text\":\"  app.use('/rest/basket/:id/order', security.isAuthorized())\"},{\"line\":434,\"text\":\"  app.post('/api/Feedbacks', verify.forgedFeedbackChallenge())\"},{\"line\":436,\"text\":\"  app.post('/api/Feedbacks', utils.asyncHandler(verifyCaptcha()))\"},{\"line\":438,\"text\":\"  app.post('/api/Feedbacks', verify.captchaBypassChallenge())\"},{\"line\":440,\"text\":\"  app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {\"},{\"line\":452,\"text\":\"  app.post('/api/Users', verify.registerAdminChallenge())\"},{\"line\":453,\"text\":\"  app.post('/api/Users', verify.passwordRepeatChallenge()) // vuln-code-snippet hide-end\"},{\"line\":454,\"text\":\"  app.post('/api/Users', verify.emptyUserRegistration())\"},{\"line\":458,\"text\":\"  app.put('/api/BasketItems/:id', security.appendUserId(), utils.asyncHandler(basketItems.quantityCheckBeforeBasketItemUpdate()))\"},{\"line\":459,\"text\":\"  app.post('/api/BasketItems', security.appendUserId(), utils.asyncHandler(basketItems.quantityCheckBeforeBasketItemAddition()), utils.asyncHandler(basketItems.addBasketItem()))\"},{\"line\":465,\"text\":\"  app.put('/api/Feedbacks/:id', security.denyAll())\"},{\"line\":635,\"text\":\"  app.post('/rest/user/login', login())\"},{\"line\":639,\"text\":\"  app.get('/rest/user/whoami', utils.asyncHandler(retrieveLoggedInUser()))\"},{\"line\":641,\"text\":\"  app.get('/rest/products/search', utils.asyncHandler(searchProducts()))\"},{\"line\":642,\"text\":\"  app.get('/rest/basket/:id', utils.asyncHandler(retrieveBasket()))\"},{\"line\":643,\"text\":\"  app.post('/rest/basket/:id/checkout', placeOrder())\"},{\"line\":644,\"text\":\"  app.put('/rest/basket/:id/coupon/:coupon', utils.asyncHandler(applyCoupon()))\"},{\"line\":645,\"text\":\"  app.get('/rest/admin/application-version', utils.asyncHandler(retrieveAppVersion()))\"},{\"line\":654,\"text\":\"  app.get('/rest/captcha', utils.asyncHandler(captchas()))\"},{\"line\":656,\"text\":\"  app.get('/rest/track-order/:id', trackOrder())\"},{\"line\":661,\"text\":\"  app.get('/rest/languages', utils.asyncHandler(getLanguageList()))\"},{\"line\":663,\"text\":\"  app.get('/rest/order-history', utils.asyncHandler(orderHistory()))\"},{\"line\":664,\"text\":\"  app.get('/rest/order-history/orders', security.isAccounting(), utils.asyncHandler(allOrders()))\"},{\"line\":665,\"text\":\"  app.put('/rest/order-history/:id/delivery-status', security.isAccounting(), utils.asyncHandler(toggleDeliveryStatus()))\"},{\"line\":671,\"text\":\"  /* NoSQL API endpoints */\"},{\"line\":776,\"text\":\"  await sequelize.sync({ force: true })\"}]},{\"path\":\"models/index.ts\",\"sha256\":\"180d2885756280fd389ae4ad40d7fbfead0a5c5bf44d74bc7196754c6f179cfb\",\"lines\":[{\"line\":29,\"text\":\"import { Sequelize, Transaction } from 'sequelize'\"},{\"line\":31,\"text\":\"let sequelize = createSequelize()\"},{\"line\":33,\"text\":\"function createSequelize (options?: { inMemory?: boolean }) {\"},{\"line\":34,\"text\":\"  return new Sequelize('database', 'username', 'password', {\"},{\"line\":35,\"text\":\"    dialect: 'sqlite',\"},{\"line\":42,\"text\":\"    storage: options?.inMemory ? ':memory:' : 'data/juiceshop.sqlite',\"},{\"line\":47,\"text\":\"function initModels (seq: Sequelize) {\"},{\"line\":73,\"text\":\"function setSequelize (seq: Sequelize) {\"},{\"line\":79,\"text\":\"export { sequelize, createSequelize, initModels, setSequelize }\"}]},{\"path\":\"lib/insecurity.ts\",\"sha256\":\"c3496760cac6a5fde403bf739a8ab5e2536d2bbc57a6e3b6a0ac50b01a6e8b8d\",\"lines\":[{\"line\":54,\"text\":\"export const authorize = (user = {}) => jwt.sign(user, privateKey, { expiresIn: '6h', algorithm: 'RS256' })\"}]},{\"path\":\"data/mongodb.ts\",\"sha256\":\"72bd8763e317801d1a3f52afae02505ae07a515dba5cdc777d5c03fcc5ad67af\",\"lines\":[{\"line\":7,\"text\":\"import * as MarsDB from 'marsdb'\"},{\"line\":9,\"text\":\"export const reviewsCollection = new MarsDB.Collection('posts')\"},{\"line\":10,\"text\":\"export const ordersCollection = new MarsDB.Collection('orders')\"}]},{\"path\":\"routes/search.ts\",\"sha256\":\"6e3272ef4065d080295d995a04964e8c5e6b1e06c4b4c8ebed3234286686ee5f\",\"lines\":[{\"line\":21,\"text\":\"    let criteria: any = req.query.q === 'undefined' ? '' : req.query.q ?? ''\"},{\"line\":23,\"text\":\"    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\"},{\"line\":47,\"text\":\"          void models.sequelize.query('SELECT sql FROM sqlite_master').then(([data]: any) => {\"}]},{\"path\":\"routes/login.ts\",\"sha256\":\"cf11d682edff6744bcb54339bce4b2dd6da5e80f9038facd7605df857b0a0b7b\",\"lines\":[{\"line\":23,\"text\":\"        const authenticatedUser = { data: user, bid: basket.id } // keep track of original basket\"},{\"line\":26,\"text\":\"        res.json({ authentication: { token, bid: basket.id, umail: user.email } })\"},{\"line\":34,\"text\":\"    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\"}]},{\"path\":\"frontend/src/app/app.routing.ts\",\"sha256\":\"8b01e4efe85494d6fce7e5ea3c192a2793c1cbfc7ff7e52a8004c943e8c8384e\",\"lines\":[{\"line\":127,\"text\":\"    path: 'basket',\"},{\"line\":131,\"text\":\"    path: 'order-completion/:id',\"},{\"line\":135,\"text\":\"    path: 'contact',\"},{\"line\":147,\"text\":\"    path: 'order-summary',\"},{\"line\":151,\"text\":\"    path: 'order-history',\"},{\"line\":163,\"text\":\"    path: 'login',\"},{\"line\":175,\"text\":\"    path: 'register',\"},{\"line\":179,\"text\":\"    path: 'search',\"},{\"line\":231,\"text\":\"        path: 'last-login-ip',\"}]},{\"path\":\"frontend/src/app/Services/basket.service.ts\",\"sha256\":\"63d41ef5f4e70d9d0c8c175d9061918dc964a641d63f83a54ac05641765d22f4\",\"lines\":[{\"line\":20,\"text\":\"  ProductId: number\"},{\"line\":21,\"text\":\"  quantity: number\"},{\"line\":26,\"text\":\"  quantity?: number\"},{\"line\":45,\"text\":\"    return this.http.get(`${this.hostServer}/rest/basket/${id}`).pipe(map((response: any) => response.data), catchError((error) => { throw error }))\"},{\"line\":49,\"text\":\"    return this.http.get(`${this.host}/${id}`).pipe(map((response: any) => response.data), catchError((error) => { throw error }))\"},{\"line\":53,\"text\":\"    return this.http.put(`${this.host}/${id}`, params).pipe(map((response: any) => response.data), catchError((error) => { throw error }))\"},{\"line\":57,\"text\":\"    return this.http.delete(`${this.host}/${id}`).pipe(map((response: any) => response.data), catchError((error) => { throw error }))\"},{\"line\":61,\"text\":\"    return this.http.post(this.host + '/', params).pipe(map((response: any) => response.data), catchError((error) => { throw error }))\"},{\"line\":65,\"text\":\"    return this.http.post(`${this.hostServer}/rest/basket/${id}/checkout`, { couponData, orderDetails }).pipe(map((response: any) => response.orderConfirmation), catchError((error) => { throw error }))\"},{\"line\":69,\"text\":\"    return this.http.put(`${this.hostServer}/rest/basket/${id}/coupon/${coupon}`, {}).pipe(map((response: any) => response.discount), catchError((error) => { throw error }))\"},{\"line\":76,\"text\":\"          this.itemTotal.next(basket.Products.reduce((itemTotal, product) => itemTotal + product.BasketItem.quantity, 0))\"},{\"line\":84,\"text\":\"    this.itemTotal.next(guestBasketItems.reduce((itemTotal, item) => itemTotal + item.quantity, 0))\"},{\"line\":102,\"text\":\"            const productId = Number(item?.ProductId)\"},{\"line\":103,\"text\":\"            const quantity = Number(item?.quantity)\"},{\"line\":104,\"text\":\"            if (!Number.isInteger(productId) || productId < 1 || !Number.isFinite(quantity) || quantity < 1) {\"},{\"line\":108,\"text\":\"              ProductId: productId,\"},{\"line\":109,\"text\":\"              quantity: Math.floor(quantity)\"},{\"line\":120,\"text\":\"  addToGuestBasket (productId: number, quantity = 1): void {\"},{\"line\":122,\"text\":\"    const existingGuestItem = guestBasketItems.find(item => item.ProductId === productId)\"},{\"line\":125,\"text\":\"      existingGuestItem.quantity += quantity\"},{\"line\":127,\"text\":\"      guestBasketItems.push({ ProductId: productId, quantity })\"},{\"line\":134,\"text\":\"  updateGuestBasketItemQuantity (productId: number, quantity: number): void {\"},{\"line\":136,\"text\":\"    const guestItemToUpdate = guestBasketItems.find(item => item.ProductId === productId)\"},{\"line\":141,\"text\":\"    guestItemToUpdate.quantity = Math.max(1, quantity)\"},{\"line\":146,\"text\":\"  getGuestBasketQuantityViolation (quantity: number, quantityInfo?: GuestBasketQuantityInfo, isDeluxe = false): GuestBasketQuantityViolation | null {\"},{\"line\":147,\"text\":\"    if (quantityInfo == null) {\"},{\"line\":151,\"text\":\"    if (!isDeluxe && quantityInfo.limitPerUser != null && quantityInfo.limitPerUser > 0 && quantity > quantityInfo.limitPerUser) {\"},{\"line\":152,\"text\":\"      return { type: 'limit', limitPerUser: quantityInfo.limitPerUser }\"},{\"line\":155,\"text\":\"    if (quantityInfo.quantity != null && quantity > quantityInfo.quantity) {\"},{\"line\":163,\"text\":\"    const guestBasketItems = this.getGuestBasketItems().filter(item => item.ProductId !== productId)\"},{\"line\":173,\"text\":\"  mergeGuestBasketIntoUserBasket (targetBasketId: number): Observable<void> {\"},{\"line\":175,\"text\":\"      basketMap.set(item.ProductId, (basketMap.get(item.ProductId) ?? 0) + item.quantity)\"},{\"line\":183,\"text\":\"    return this.find(targetBasketId).pipe(\"},{\"line\":191,\"text\":\"        const mergeRequests = Array.from(mergedGuestBasketItems.entries()).map(([productId, quantity]) => {\"},{\"line\":194,\"text\":\"            return this.put(existingBasketItem.id, { quantity: existingBasketItem.quantity + quantity }).pipe(catchError(() => of(null)))\"},{\"line\":196,\"text\":\"          return this.save({ ProductId: productId, BasketId: targetBasketId, quantity }).pipe(catchError(() => of(null)))\"}]},{\"path\":\"frontend/src/app/Services/user.service.ts\",\"sha256\":\"94ad68d84127aa705a5f65a6fa9f433cc755fe255fa7e1409cc76d680b8c22fa\",\"lines\":[{\"line\":29,\"text\":\"    return this.http.get(this.hostServer + '/rest/user/authentication-details/', { params }).pipe(map((response: any) =>\"},{\"line\":34,\"text\":\"    return this.http.get(`${this.host}/${id}`).pipe(map((response: any) => response.data), catchError((err) => { throw err }))\"},{\"line\":38,\"text\":\"    return this.http.post(this.host + '/', params).pipe(\"},{\"line\":44,\"text\":\"  login (params: any) {\"},{\"line\":46,\"text\":\"    return this.http.post(this.hostServer + '/rest/user/login', params).pipe(map((response: any) => response.authentication), catchError((err) => { throw err }))\"},{\"line\":53,\"text\":\"  changePassword (passwords: Passwords) {\"},{\"line\":54,\"text\":\"    return this.http.get(this.hostServer + '/rest/user/change-password?current=' + passwords.current + '&new=' +\"},{\"line\":55,\"text\":\"    passwords.new + '&repeat=' + passwords.repeat).pipe(map((response: any) => response.user), catchError((err) => { throw err.error }))\"},{\"line\":59,\"text\":\"    return this.http.post(this.hostServer + '/rest/user/reset-password', params).pipe(map((response: any) => response.user), catchError((err) => { throw err }))\"},{\"line\":64,\"text\":\"    return this.http.get(this.hostServer + '/rest/user/whoami' + queryParam).pipe(map((response: any) => response.user), catchError((err) => { throw err }))\"},{\"line\":68,\"text\":\"    return this.http.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + accessToken)\"},{\"line\":72,\"text\":\"    return this.http.get(this.hostServer + '/rest/saveLoginIp').pipe(map((response: any) => response), catchError((err) => { throw err }))\"},{\"line\":76,\"text\":\"    return this.http.get(this.hostServer + '/rest/deluxe-membership').pipe(map((response: any) => response.data), catchError((err) => { throw err }))\"},{\"line\":80,\"text\":\"    return this.http.post(this.hostServer + '/rest/deluxe-membership', { paymentMode, paymentId }).pipe(map((response: any) => response.data), catchError((err) => { throw err }))\"}]}]}",
+    "stderr": ""
+  },
+  "waf": {
+    "fecha": "2026-11-16T07:29:02-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "logs",
+      "--no-color",
+      "--since",
+      "3m",
+      "waf"
+    ],
+    "exit_code": 0,
+    "seleccion": "Últimos 7 eventos proxy; solo metadatos permitidos, sin payloads, cabeceras, cookies o mensajes crudos.",
+    "eventos": [
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.588542 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlI_QAAAEA",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33826,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.596425 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlI_gAAAEI",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33840,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.621213 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlI_wAAAEQ",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33852,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.630222 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlJAAAAAEY",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33854,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.732363 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlJAQAAAEg",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33856,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.796177 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlJAgAAAEo",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33862,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:13:29:02.810641 +0000",
+          "transaction_id": "avsFHojbWQ1bCYL2SRlJAwAAAEw",
+          "remote_address": "172.19.0.1",
+          "remote_port": 33872,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      }
+    ]
+  }
+}

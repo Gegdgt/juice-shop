@@ -1,0 +1,439 @@
+{
+  "fecha": "2026-11-15T23:51:18-06:00",
+  "destino_autorizado": "http://127.0.0.1:8081",
+  "metodo": "Inspección Docker, lectura de código empaquetado y GET normales sin cookies. No se guardan cuerpos ni cabeceras sensibles.",
+  "comandos": [
+    {
+      "fecha": "2026-11-15T23:51:18-06:00",
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (fetch)\norigin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (push)",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:18-06:00",
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "main",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:18-06:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "1a2f3b8146b2198710464e336ee0217f24d1484b",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:18-06:00",
+      "argv": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .}}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"Client\":{\"Version\":\"29.8.1\",\"ApiVersion\":\"1.56\",\"DefaultAPIVersion\":\"1.56\",\"GitCommit\":\"4a63305\",\"GoVersion\":\"go1.26.8\",\"Os\":\"windows\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Sep 15 16:28:39 2026\",\"Context\":\"desktop-linux\"},\"Server\":{\"Platform\":{\"Name\":\"Docker Desktop 4.93.0 (240920)\"},\"Version\":\"29.8.1\",\"ApiVersion\":\"1.56\",\"MinAPIVersion\":\"1.40\",\"Os\":\"linux\",\"Arch\":\"amd64\",\"Components\":[{\"Name\":\"Engine\",\"Version\":\"29.8.1\",\"Details\":{\"ApiVersion\":\"1.56\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Sep 15 16:25:38 2026\",\"Experimental\":\"false\",\"GitCommit\":\"464cd50\",\"GoVersion\":\"go1.26.8\",\"KernelVersion\":\"6.6.87.2-microsoft-standard-WSL2\",\"MinAPIVersion\":\"1.40\",\"Module\":\"github.com/moby/moby/v2\",\"ModuleVersion\":\"v2.0.0+unknown\",\"Os\":\"linux\"}},{\"Name\":\"containerd\",\"Version\":\"v2.3.5\",\"Details\":{\"GitCommit\":\"1294c24a7da8e5a793ed378161673abe94118892\"}},{\"Name\":\"runc\",\"Version\":\"1.5.1\",\"Details\":{\"GitCommit\":\"v1.5.1-0-g8f2685a4\"}},{\"Name\":\"docker-init\",\"Version\":\"0.19.0\",\"Details\":{\"GitCommit\":\"de40ad0\"}}],\"GitCommit\":\"464cd50\",\"GoVersion\":\"go1.26.8\",\"KernelVersion\":\"6.6.87.2-microsoft-standard-WSL2\",\"BuildTime\":\"2026-09-15T16:25:38.000000000+00:00\"}}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:18-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "Docker Compose version v5.5.1",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config"
+      ],
+      "exit_code": 0,
+      "stdout": "name: juiceshop-h1\nservices:\n  juice-shop:\n    expose:\n      - \"3000\"\n    healthcheck:\n      test:\n        - CMD\n        - /nodejs/bin/node\n        - -e\n        - require('http').get('http://127.0.0.1:3000/',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))\n      timeout: 5s\n      interval: 15s\n      retries: 10\n      start_period: 1m0s\n    image: bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      interna: null\n    restart: unless-stopped\n  waf:\n    depends_on:\n      juice-shop:\n        condition: service_healthy\n        required: true\n    environment:\n      BACKEND: http://juice-shop:3000\n      MODSEC_AUDIT_ENGINE: 'On'\n      MODSEC_AUDIT_LOG: /dev/stdout\n      MODSEC_AUDIT_LOG_FORMAT: JSON\n      MODSEC_AUDIT_LOG_PARTS: AHZ\n      MODSEC_RULE_ENGINE: DetectionOnly\n      PORT: \"8080\"\n      SERVER_NAME: localhost\n    image: owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      entrada: null\n      interna: null\n    ports:\n      - mode: ingress\n        host_ip: 127.0.0.1\n        target: 8080\n        published: \"8081\"\n        protocol: tcp\n    restart: unless-stopped\nnetworks:\n  entrada:\n    name: juiceshop-h1_entrada\n    driver: bridge\n  interna:\n    name: juiceshop-h1_interna\n    driver: bridge\n    internal: true",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "ps",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"Command\":\"\\\"/nodejs/bin/node /j…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:08 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"66ff4d7ae988\",\"Image\":\"bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.replace=juice-shop-1,org.opencontainers.image.authors=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e,org.opencontainers.image.description=Probably the most modern and sophisticated insecure web application,org.opencontainers.image.url=https://owasp-juice.shop,org.opencontainers.image.vendor=Open Worldwide Application Security Project,org.opencontainers.image.version=20.4.0-SNAPSHOT,com.docker.compose.project=juiceshop-h1,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,org.opencontainers.image.created=”2026-11-08T19:09:22Z”,org.opencontainers.image.revision=266448a,com.docker.compose.depends_on=,com.docker.compose.image=sha256:aeb28af19303bb9e0437c2c82b5ab223bc8da56dc73472343be04aacca7e3143,com.docker.compose.service=juice-shop,desktop.docker.io/ports.scheme=v2,maintainer=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e,org.opencontainers.image.documentation=https://help.owasp-juice.shop,org.opencontainers.image.source=https://github.com/juice-shop/juice-shop,org.opencontainers.image.title=OWASP Juice Shop,com.docker.compose.config-hash=772725dff021d666ce241fb031a9fe1bef5ad11c912a15d38be0dc4ca2cd10ee,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,com.docker.compose.version=5.5.1,org.opencontainers.image.licenses=MIT\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-juice-shop-1\",\"Names\":\"juiceshop-h1-juice-shop-1\",\"Networks\":\"juiceshop-h1_interna\",\"Ports\":\"3000/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":3000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"2 minutes ago\",\"Service\":\"juice-shop\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 2 minutes (healthy)\"}\n{\"Command\":\"\\\"/docker-entrypoint.…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:54 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"977db99d12ec\",\"Image\":\"owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\",\"Labels\":\"com.docker.compose.depends_on=juice-shop:service_healthy:false,com.docker.compose.oneoff=False,desktop.docker.io/ports/8080/tcp=127.0.0.1:8081,org.opencontainers.image.source=https://github.com/coreruleset/modsecurity-crs-docker,com.docker.compose.project=juiceshop-h1,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,com.docker.compose.version=5.5.1,desktop.docker.io/ports.scheme=v2,maintainer=Felipe Zipitria \\u003cfelipe.zipitria@owasp.org\\u003e,com.docker.compose.config-hash=d2d6128edf5c1cf18d09b429c2189b9426245c5a1b21d1943a2ed9b2e47bd1d5,com.docker.compose.container-number=1,com.docker.compose.image=sha256:05b5748b24ecdb643de562381a46732163baf54796689c8345e3082b6f241862,com.docker.compose.replace=waf-1,com.docker.compose.service=waf\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-waf-1\",\"Names\":\"juiceshop-h1-waf-1\",\"Networks\":\"juiceshop-h1_entrada,juiceshop-h1_interna\",\"Ports\":\"127.0.0.1:8081-\\u003e8080/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8080,\"PublishedPort\":8081,\"Protocol\":\"tcp\"}],\"RunningFor\":\"About a minute ago\",\"Service\":\"waf\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up About a minute (healthy)\"}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:19-06:00",
+      "argv": [
+        "docker",
+        "inspect",
+        "juiceshop-h1-juice-shop-1",
+        "juiceshop-h1-waf-1",
+        "--format",
+        "{{json .Name}} {{json .State.Status}} {{json .NetworkSettings.Ports}} {{json .HostConfig.PortBindings}}"
+      ],
+      "exit_code": 0,
+      "stdout": "\"/juiceshop-h1-juice-shop-1\" \"running\" {\"3000/tcp\":null} {}\n\"/juiceshop-h1-waf-1\" \"running\" {\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"8081\"}]} {\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"8081\"}]}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:19-06:00",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "juiceshop-h1_interna",
+        "--format",
+        "{{json .Internal}} {{json .Containers}}"
+      ],
+      "exit_code": 0,
+      "stdout": "true {\"66ff4d7ae988e3e902f7ae668fbc6d9976cbbb5f52b799e6cb032f86fd789301\":{\"Name\":\"juiceshop-h1-juice-shop-1\",\"EndpointID\":\"9d629323df791bbdb4abbeee5c86a9d13dd7fcd3c709b446bd1b66e4f63788e8\",\"MacAddress\":\"fe:6a:f3:29:10:4f\",\"IPv4Address\":\"172.20.0.2/16\",\"IPv6Address\":\"\"},\"977db99d12ec5ae4d9dceb30fb264e2f0392a1edead5555664e9f6f2579b8969\":{\"Name\":\"juiceshop-h1-waf-1\",\"EndpointID\":\"06ce287027a5110e48f3017521af34d15ecc8cef1e33f9579461b5ccf5dc4a6d\",\"MacAddress\":\"ee:5a:2b:7a:ac:c9\",\"IPv4Address\":\"172.20.0.3/16\",\"IPv6Address\":\"\"}}",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-t"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Syntax OK"
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-M"
+      ],
+      "exit_code": 0,
+      "stdout": "Loaded Modules:\n core_module (static)\n so_module (static)\n http_module (static)\n mpm_event_module (shared)\n authn_file_module (shared)\n authn_core_module (shared)\n authz_host_module (shared)\n authz_groupfile_module (shared)\n authz_user_module (shared)\n authz_core_module (shared)\n access_compat_module (shared)\n auth_basic_module (shared)\n socache_shmcb_module (shared)\n reqtimeout_module (shared)\n filter_module (shared)\n mime_module (shared)\n log_config_module (shared)\n env_module (shared)\n headers_module (shared)\n unique_id_module (shared)\n setenvif_module (shared)\n version_module (shared)\n remoteip_module (shared)\n proxy_module (shared)\n proxy_http_module (shared)\n ssl_module (shared)\n http2_module (shared)\n unixd_module (shared)\n status_module (shared)\n autoindex_module (shared)\n dir_module (shared)\n alias_module (shared)\n rewrite_module (shared)\n security2_module (shared)",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "cat",
+        "/etc/modsecurity.d/modsecurity.conf",
+        "/etc/modsecurity.d/modsecurity-override.conf"
+      ],
+      "exit_code": 0,
+      "stdout": "SecRuleEngine ${MODSEC_RULE_ENGINE}\nSecRequestBodyAccess ${MODSEC_REQ_BODY_ACCESS}\nSecRequestBodyLimit ${MODSEC_REQ_BODY_LIMIT}\nSecRequestBodyNoFilesLimit ${MODSEC_REQ_BODY_NOFILES_LIMIT}\nSecRequestBodyLimitAction ${MODSEC_REQ_BODY_LIMIT_ACTION}\nSecRequestBodyJsonDepthLimit ${MODSEC_REQ_BODY_JSON_DEPTH_LIMIT}\nSecResponseBodyAccess ${MODSEC_RESP_BODY_ACCESS}\nSecResponseBodyMimeType ${MODSEC_RESP_BODY_MIMETYPE}\nSecResponseBodyLimit ${MODSEC_RESP_BODY_LIMIT}\nSecResponseBodyLimitAction ${MODSEC_RESP_BODY_LIMIT_ACTION}\nSecAuditEngine ${MODSEC_AUDIT_ENGINE}\nSecAuditLogRelevantStatus \"${MODSEC_AUDIT_LOG_RELEVANT_STATUS}\"\nSecAuditLogParts ${MODSEC_AUDIT_LOG_PARTS}\nSecAuditLogType ${MODSEC_AUDIT_LOG_TYPE}\nSecAuditLog ${MODSEC_AUDIT_LOG}\nSecAuditLogFormat ${MODSEC_AUDIT_LOG_FORMAT}\nSecAuditLogStorageDir ${MODSEC_AUDIT_STORAGE_DIR}",
+      "stderr": "",
+      "seleccion": "Solo directivas de motor/auditoría/cuerpos, sin comentarios."
+    }
+  ],
+  "http": [
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 9984,
+      "sha256": "7a077ea089234d5fb7e9f5775a384573ec97da96d8c74aaf230984fc723fe48b",
+      "server": "Apache",
+      "contiene_juice_shop": true
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/robots.txt",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 28,
+      "sha256": "09f7c2328189ecdd2e687cccdafb34a16b3d2166f50f0a7962ed4de5b3aaf696",
+      "server": "Apache",
+      "contenido_publico": "User-agent: *\nDisallow: /ftp"
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/products/search?q=apple",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 1617,
+      "sha256": "ee9d2e74d149d153874bb03683b59fa0a2ef408cfdc2d363ced10e92fb896d1c",
+      "server": "Apache",
+      "claves_raiz": [
+        "status",
+        "data"
+      ],
+      "numero_elementos": 3,
+      "campos_primer_elemento": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "deluxePrice",
+        "image",
+        "alternateImages",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+      ]
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/user/whoami",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 11,
+      "sha256": "e436ef2b7de06788f8fc4b305c0a08d3ab7ee580ec3c1057cc9f3fdeac867081",
+      "server": "Apache",
+      "claves_raiz": [
+        "user"
+      ]
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/languages",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 4349,
+      "sha256": "920aae518ec0ab1093840e7ee7cebcce3f2dce2b93fc0097283fdc908a4b8186",
+      "server": "Apache",
+      "claves_raiz": [
+        "array"
+      ]
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/captcha",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 48,
+      "sha256": "8e9aeccbd7b4fa3d44049fa90070a41ea833cb223ab7be95a3dc894ca62be87d",
+      "server": "Apache",
+      "claves_raiz": [
+        "captchaId",
+        "captcha",
+        "answer"
+      ]
+    },
+    {
+      "fecha": "2026-11-15T23:51:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/admin/application-version",
+      "sesion": "Sin credenciales ni cookies",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 29,
+      "sha256": "bdb6a0e5bff93979edc9a4ffe63c61d3b6ede71861c5f92ed6f567350ab5904d",
+      "server": "Apache",
+      "claves_raiz": [
+        "version"
+      ]
+    }
+  ],
+  "codigo": {
+    "fecha": "2026-11-15T23:51:20-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "exec",
+      "-T",
+      "juice-shop",
+      "/nodejs/bin/node",
+      "-e",
+      "const fs=require('fs'),crypto=require('crypto');\nconst specs={\n 'server.ts':/app\\.(get|post|put|delete|use)\\(['\"]\\/(rest\\/(user\\/login|user\\/whoami|products\\/search|basket|order-history|track-order|captcha|languages|admin\\/application-version)|api\\/(BasketItems|Users|Feedbacks))|sequelize\\.sync|nosql|new finale/i,\n 'models/index.ts':/sqlite|storage|Sequelize/,\n 'lib/insecurity.ts':/jwt\\.sign|expiresIn|Authorization|Bearer/,\n 'lib/db.ts':/mars|Collection|orders|reviews/,\n 'routes/search.ts':/req\\.query|sequelize\\.query/,\n 'routes/login.ts':/req\\.body|authentication:|token:|bid:|umail:/,\n 'frontend/src/app/app-routing.module.ts':/path:.*(login|register|search|basket|order|contact)/,\n 'frontend/src/app/Services/basket.service.ts':/this\\.http|quantity|ProductId|BasketId/,\n 'frontend/src/app/Services/user.service.ts':/this\\.http|login|email|password/};\nconst out={version:require('./package.json').version,node:process.version,files:[]};\nfor(const [p,re] of Object.entries(specs)){if(fs.existsSync(p)){const s=fs.readFileSync(p,'utf8');out.files.push({path:p,sha256:crypto.createHash('sha256').update(s).digest('hex'),lines:s.split('\n').flatMap((v,i)=>re.test(v)?[{line:i+1,text:v}]:[])});}else{out.files.push({path:p,estado:'No existe en esta imagen'});}}\nconsole.log(JSON.stringify(out));"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "[eval]:13\nfor(const [p,re] of Object.entries(specs)){if(fs.existsSync(p)){const s=fs.readFileSync(p,'utf8');out.files.push({path:p,sha256:crypto.createHash('sha256').update(s).digest('hex'),lines:s.split('\n                                                                                                                                                                                                  ^\nExpected ',', got 'string literal'\n\nSyntaxError: Invalid or unexpected token\n    at makeContextifyScript (node:internal/vm:194:14)\n    at compileScript (node:internal/process/execution:388:10)\n    at evalTypeScript (node:internal/process/execution:260:22)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.22.2"
+  },
+  "waf": {
+    "fecha": "2026-11-15T23:51:21-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "logs",
+      "--no-color",
+      "--since",
+      "3m",
+      "waf"
+    ],
+    "exit_code": 0,
+    "seleccion": "Últimos 7 eventos proxy; solo metadatos permitidos, sin payloads, cabeceras, cookies o mensajes crudos.",
+    "eventos": [
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.678193 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7CgAAAIY",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41682,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.684636 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7CwAAAIg",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41686,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.705737 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7DAAAAIo",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41698,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.713203 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7DQAAAIw",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41704,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.810656 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7DgAAAI4",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41714,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.853451 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7DwAAAJA",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41716,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      },
+      {
+        "transaction": {
+          "time": "16/Nov/2026:05:51:20.865099 +0000",
+          "transaction_id": "avqZ2K83BIuL-GnSIab7EAAAAJE",
+          "remote_address": "172.19.0.1",
+          "remote_port": 41726,
+          "local_address": "172.19.0.2",
+          "local_port": 8080
+        },
+        "handler": "proxy-server",
+        "engine_mode": "DETECTION_ONLY",
+        "producer": [
+          "ModSecurity for Apache/2.9.15 (http://www.modsecurity.org/)",
+          "OWASP_CRS/4.30.0"
+        ],
+        "regla_host_numerico": true
+      }
+    ]
+  }
+}

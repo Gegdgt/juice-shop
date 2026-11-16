@@ -1,0 +1,258 @@
+{
+  "fecha": "2026-11-16T07:28:17-06:00",
+  "destino_autorizado": "http://127.0.0.1:8081",
+  "metodo": "Inspección Docker, lectura de código empaquetado y GET normales sin cookies. No se guardan cuerpos ni cabeceras sensibles.",
+  "comandos": [
+    {
+      "fecha": "2026-11-16T07:28:17-06:00",
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (fetch)\norigin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (push)",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:28:17-06:00",
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "main",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:28:17-06:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "1a2f3b8146b2198710464e336ee0217f24d1484b",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:28:17-06:00",
+      "argv": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .}}"
+      ],
+      "exit_code": 1,
+      "stdout": "{\"Client\":{\"Version\":\"29.8.1\",\"ApiVersion\":\"1.56\",\"DefaultAPIVersion\":\"1.56\",\"GitCommit\":\"4a63305\",\"GoVersion\":\"go1.26.8\",\"Os\":\"windows\",\"Arch\":\"amd64\",\"BuildTime\":\"Tue Sep 15 16:28:39 2026\",\"Context\":\"desktop-linux\"},\"Server\":null}",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:17-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "Docker Compose version v5.5.1",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:28:18-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config"
+      ],
+      "exit_code": 0,
+      "stdout": "name: juiceshop-h1\nservices:\n  juice-shop:\n    expose:\n      - \"3000\"\n    healthcheck:\n      test:\n        - CMD\n        - /nodejs/bin/node\n        - -e\n        - require('http').get('http://127.0.0.1:3000/',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))\n      timeout: 5s\n      interval: 15s\n      retries: 10\n      start_period: 1m0s\n    image: bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      interna: null\n    restart: unless-stopped\n  waf:\n    depends_on:\n      juice-shop:\n        condition: service_healthy\n        required: true\n    environment:\n      BACKEND: http://juice-shop:3000\n      MODSEC_AUDIT_ENGINE: 'On'\n      MODSEC_AUDIT_LOG: /dev/stdout\n      MODSEC_AUDIT_LOG_FORMAT: JSON\n      MODSEC_AUDIT_LOG_PARTS: AHZ\n      MODSEC_RULE_ENGINE: DetectionOnly\n      PORT: \"8080\"\n      SERVER_NAME: localhost\n    image: owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\n    logging:\n      driver: json-file\n      options:\n        max-file: \"3\"\n        max-size: 10m\n    networks:\n      entrada: null\n      interna: null\n    ports:\n      - mode: ingress\n        host_ip: 127.0.0.1\n        target: 8080\n        published: \"8081\"\n        protocol: tcp\n    restart: unless-stopped\nnetworks:\n  entrada:\n    name: juiceshop-h1_entrada\n    driver: bridge\n  interna:\n    name: juiceshop-h1_interna\n    driver: bridge\n    internal: true",
+      "stderr": ""
+    },
+    {
+      "fecha": "2026-11-16T07:28:18-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "ps",
+        "--format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:18-06:00",
+      "argv": [
+        "docker",
+        "inspect",
+        "juiceshop-h1-juice-shop-1",
+        "juiceshop-h1-waf-1",
+        "--format",
+        "{{json .Name}} {{json .State.Status}} {{json .NetworkSettings.Ports}} {{json .HostConfig.PortBindings}}"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\nfailed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:18-06:00",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "juiceshop-h1_interna",
+        "--format",
+        "{{json .Internal}} {{json .Containers}}"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-t"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "httpd",
+        "-M"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    {
+      "fecha": "2026-11-16T07:28:19-06:00",
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "exec",
+        "-T",
+        "waf",
+        "cat",
+        "/etc/modsecurity.d/modsecurity.conf",
+        "/etc/modsecurity.d/modsecurity-override.conf"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.",
+      "seleccion": "Solo directivas de motor/auditoría/cuerpos, sin comentarios."
+    }
+  ],
+  "http": [
+    {
+      "fecha": "2026-11-16T07:28:20-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:22-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/robots.txt",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:24-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/products/search?q=apple",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:26-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/user/whoami",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:28-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/languages",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:30-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/captcha",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    },
+    {
+      "fecha": "2026-11-16T07:28:32-06:00",
+      "metodo": "GET",
+      "url": "http://127.0.0.1:8081/rest/admin/application-version",
+      "sesion": "Sin credenciales ni cookies",
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    }
+  ],
+  "codigo": {
+    "fecha": "2026-11-16T07:28:20-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "exec",
+      "-T",
+      "juice-shop",
+      "/nodejs/bin/node",
+      "-e",
+      "const fs=require('fs'),crypto=require('crypto');\nconst specs={\n 'server.ts':/app\\.(get|post|put|delete|use)\\(['\\\"]\\/(rest\\/(user\\/login|user\\/whoami|products\\/search|basket|order-history|track-order|captcha|languages|admin\\/application-version)|api\\/(BasketItems|Users|Feedbacks))|sequelize\\.sync|nosql|new finale/i,\n 'models/index.ts':/sqlite|storage|Sequelize/,\n 'lib/insecurity.ts':/jwt\\.sign|expiresIn|Authorization|Bearer/,\n 'data/mongodb.ts':/mars|Collection|orders|reviews/,\n 'routes/search.ts':/req\\.query|sequelize\\.query/,\n 'routes/login.ts':/authentication:|bid: basket.id|models.sequelize.query/,\n 'frontend/src/app/app.routing.ts':/path:.*(login|register|search|basket|order|contact)/,\n 'frontend/src/app/Services/basket.service.ts':/this\\.http|quantity|ProductId|BasketId/,\n 'frontend/src/app/Services/user.service.ts':/this\\.http|login|email|password/};\nconst out={version:require('./package.json').version,node:process.version,files:[]};\nfor(const [p,re] of Object.entries(specs)){if(fs.existsSync(p)){const s=fs.readFileSync(p,'utf8');out.files.push({path:p,sha256:crypto.createHash('sha256').update(s).digest('hex'),lines:s.split('\\n').flatMap((v,i)=>re.test(v)?[{line:i+1,text:v}]:[])});}else{out.files.push({path:p,estado:'No existe en esta imagen'});}}\nconsole.log(JSON.stringify(out));"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+  },
+  "waf": {
+    "fecha": "2026-11-16T07:28:44-06:00",
+    "argv": [
+      "docker",
+      "compose",
+      "-f",
+      "entorno-blue-team/compose.yaml",
+      "logs",
+      "--no-color",
+      "--since",
+      "3m",
+      "waf"
+    ],
+    "exit_code": 0,
+    "seleccion": "Últimos 7 eventos proxy; solo metadatos permitidos, sin payloads, cabeceras, cookies o mensajes crudos.",
+    "eventos": []
+  }
+}

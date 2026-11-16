@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-16T07:31:36-06:00",
+  "comandos": [
+    {
+      "argv": [
+        "python",
+        "scripts/validar-h1.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"comprobaciones_ok\": 351,\n  \"enlaces_locales\": 62,\n  \"amenazas\": 16,\n  \"requisitos\": 13,\n  \"casos\": 12,\n  \"errores\": []\n}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "up",
+        "-d"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Container juiceshop-h1-waf-1 Running \n Container juiceshop-h1-juice-shop-1 Running \n Container juiceshop-h1-juice-shop-1 Waiting \n Container juiceshop-h1-juice-shop-1 Healthy"
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "ps",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"Command\":\"\\\"/nodejs/bin/node /j…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:08 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"66ff4d7ae988\",\"Image\":\"bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\",\"Labels\":\"org.opencontainers.image.url=https://owasp-juice.shop,org.opencontainers.image.vendor=Open Worldwide Application Security Project,com.docker.compose.container-number=1,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,com.docker.compose.replace=juice-shop-1,maintainer=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e,org.opencontainers.image.created=”2026-11-08T19:09:22Z”,org.opencontainers.image.documentation=https://help.owasp-juice.shop,org.opencontainers.image.revision=266448a,org.opencontainers.image.source=https://github.com/juice-shop/juice-shop,org.opencontainers.image.version=20.4.0-SNAPSHOT,com.docker.compose.config-hash=772725dff021d666ce241fb031a9fe1bef5ad11c912a15d38be0dc4ca2cd10ee,com.docker.compose.depends_on=,com.docker.compose.image=sha256:aeb28af19303bb9e0437c2c82b5ab223bc8da56dc73472343be04aacca7e3143,com.docker.compose.oneoff=False,com.docker.compose.service=juice-shop,com.docker.compose.version=5.5.1,org.opencontainers.image.description=Probably the most modern and sophisticated insecure web application,org.opencontainers.image.licenses=MIT,com.docker.compose.project=juiceshop-h1,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.authors=Bjoern Kimminich \\u003cbjoern.kimminich@owasp.org\\u003e,org.opencontainers.image.title=OWASP Juice Shop\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-juice-shop-1\",\"Names\":\"juiceshop-h1-juice-shop-1\",\"Networks\":\"juiceshop-h1_interna\",\"Ports\":\"3000/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":3000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"8 hours ago\",\"Service\":\"juice-shop\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 2 minutes (healthy)\"}\n{\"Command\":\"\\\"/docker-entrypoint.…\\\"\",\"CreatedAt\":\"2026-11-15 23:49:54 -0600 CST\",\"Engine\":\"\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"977db99d12ec\",\"Image\":\"owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\",\"Labels\":\"com.docker.compose.image=sha256:05b5748b24ecdb643de562381a46732163baf54796689c8345e3082b6f241862,com.docker.compose.project=juiceshop-h1,com.docker.compose.project.config_files=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team\\\\compose.yaml,com.docker.compose.project.working_dir=C:\\\\Users\\\\gegdg\\\\Documents\\\\.UVG\\\\Anio6\\\\SegundoSemestre\\\\DesarrolloSeguro\\\\Proyecto_Final_Desarrollo_Seguro\\\\entorno-blue-team,com.docker.compose.replace=waf-1,com.docker.compose.container-number=1,com.docker.compose.depends_on=juice-shop:service_healthy:false,com.docker.compose.oneoff=False,com.docker.compose.service=waf,desktop.docker.io/ports/8080/tcp=127.0.0.1:8081,org.opencontainers.image.source=https://github.com/coreruleset/modsecurity-crs-docker,com.docker.compose.config-hash=d2d6128edf5c1cf18d09b429c2189b9426245c5a1b21d1943a2ed9b2e47bd1d5,com.docker.compose.version=5.5.1,desktop.docker.io/ports.scheme=v2,maintainer=Felipe Zipitria \\u003cfelipe.zipitria@owasp.org\\u003e\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"juiceshop-h1-waf-1\",\"Names\":\"juiceshop-h1-waf-1\",\"Networks\":\"juiceshop-h1_entrada,juiceshop-h1_interna\",\"Ports\":\"127.0.0.1:8081-\\u003e8080/tcp\",\"Project\":\"juiceshop-h1\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8080,\"PublishedPort\":8081,\"Protocol\":\"tcp\"}],\"RunningFor\":\"8 hours ago\",\"Service\":\"waf\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 2 minutes (healthy)\"}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "juiceshop-h1-juice-shop-1",
+        "juiceshop-h1-waf-1",
+        "--format",
+        "{{json .Name}} {{json .State.Health.Status}} {{json .Config.Image}} {{json .HostConfig.PortBindings}}"
+      ],
+      "exit_code": 0,
+      "stdout": "\"/juiceshop-h1-juice-shop-1\" \"healthy\" \"bkimminich/juice-shop@sha256:877fc77b12d72b42e486eb09b6b1711cc56514306d92006b284e7e7cf076a809\" {}\n\"/juiceshop-h1-waf-1\" \"healthy\" \"owasp/modsecurity-crs@sha256:085246dd9bea795b750bac05692adf001cc2c4119767c1639a7c462106a54164\" {\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"8081\"}]}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "M README.md\n?? .gitignore\n?? docs/\n?? entorno-blue-team/\n?? scripts/",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--stat"
+      ],
+      "exit_code": 0,
+      "stdout": "README.md | 151 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-\n 1 file changed, 150 insertions(+), 1 deletion(-)",
+      "stderr": ""
+    }
+  ],
+  "kit_original_preservado": true,
+  "archivos_kit": 14,
+  "inventario": [
+    ".gitignore",
+    "README.md",
+    "docs/hito-1/01-PASTA-1-2.md",
+    "docs/hito-1/02-PASTA-3-DFD.md",
+    "docs/hito-1/03-PASTA-4-STRIDE.md",
+    "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+    "docs/hito-1/05-RedTeam-reconocimiento.md",
+    "docs/hito-1/06-BlueTeam-configuracion.md",
+    "docs/hito-1/07-CHECKLIST.md",
+    "docs/hito-1/08-Migracion-fork.md",
+    "docs/hito-1/09-Fuentes-y-uso-IA.md",
+    "docs/hito-1/DFD-referencia.dot",
+    "docs/hito-1/DFD-referencia.png",
+    "docs/hito-1/DFD-referencia.svg",
+    "docs/hito-1/README.md",
+    "docs/hito-1/evidencias/README.md",
+    "docs/hito-1/evidencias/VALIDACION-FINAL.json",
+    "docs/hito-1/evidencias/verificacion-20261115-235121.json",
+    "docs/hito-1/evidencias/verificacion-20261115-235143.json",
+    "docs/hito-1/evidencias/verificacion-20261115-235210.json",
+    "docs/hito-1/evidencias/verificacion-20261116-072844.json",
+    "docs/hito-1/evidencias/verificacion-20261116-072902.json",
+    "docs/hito-1/evidencias/VERIFICACION.md",
+    "docs/hito-1/fuentes/kit-original.zip",
+    "docs/hito-1/fuentes/MANIFIESTO.json",
+    "docs/hito-1/fuentes/README-raiz-original.md",
+    "entorno-blue-team/compose.yaml",
+    "scripts/recopilar-evidencia-h1.py",
+    "scripts/validar-h1.py"
+  ],
+  "todos_comandos_exit_0": true
+}

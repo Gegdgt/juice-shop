@@ -1,0 +1,155 @@
+{
+  "fecha": "2026-11-16T07:49:03-06:00",
+  "origen": "Gegdgt/Proyecto_Final_Desarrollo_Seguro",
+  "commit_origen": "fc44a997d1f6d55a1f11576cd93be5c691c29133",
+  "destino": "Gegdgt/juice-shop",
+  "base_destino": "266448aba68cd8ba5915f526a128da4fa7bc3f9f",
+  "rama": "hito-1-integracion",
+  "archivos_origen": [
+    {
+      "archivo": ".gitignore",
+      "bytes": 1035,
+      "sha256": "5e8a0a638b70b526b9f2310fa18f60898d983aa641b848b8a3a49ed8fb1c6844"
+    },
+    {
+      "archivo": "docs/hito-1/01-PASTA-1-2.md",
+      "bytes": 5891,
+      "sha256": "17d206d8826e6a42e24d2e39dc634691c986681be5d88dafb4dd97d312d97fd6"
+    },
+    {
+      "archivo": "docs/hito-1/02-PASTA-3-DFD.md",
+      "bytes": 5125,
+      "sha256": "dd0b7d0afb046cfb7855a62a397dd6d2483f95c5e9bab069a9cf38013108a8a6"
+    },
+    {
+      "archivo": "docs/hito-1/03-PASTA-4-STRIDE.md",
+      "bytes": 5585,
+      "sha256": "c1e6a791171573841855a2fda588d7a456f21d67d74c8388895d889cfc6ca829"
+    },
+    {
+      "archivo": "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+      "bytes": 11416,
+      "sha256": "b4c68bab3db698f9f4049ef14d53a4c9a5ef8965d70a5effd967312514c96fa1"
+    },
+    {
+      "archivo": "docs/hito-1/05-RedTeam-reconocimiento.md",
+      "bytes": 7688,
+      "sha256": "03d8eef598eae878abc85768df51a2f246e25533c04f686ee5a37cdc26216342"
+    },
+    {
+      "archivo": "docs/hito-1/06-BlueTeam-configuracion.md",
+      "bytes": 5474,
+      "sha256": "b6b0e54a437db839db839ade63505647750715a0f25a2b808714286b341d9830"
+    },
+    {
+      "archivo": "docs/hito-1/07-CHECKLIST.md",
+      "bytes": 3971,
+      "sha256": "1343574544586faf5b446dcd7903d80db4a04f88930882718b68d85ab3883dd4"
+    },
+    {
+      "archivo": "docs/hito-1/08-Migracion-fork.md",
+      "bytes": 3767,
+      "sha256": "d035585fdcabdb6c6c7951adeeea8faea562eb475c64b35dcc14969f6f64cc6e"
+    },
+    {
+      "archivo": "docs/hito-1/09-Fuentes-y-uso-IA.md",
+      "bytes": 3655,
+      "sha256": "305b0d027e7e13f3bca66e6e7a9472dfe5a03cd01682e25cbe19c3ed2224b69c"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.dot",
+      "bytes": 2439,
+      "sha256": "fe71ef743626e6b9856d564b4a1ef27c290893abbdcb8fad4004a31febfee0ce"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.png",
+      "bytes": 93995,
+      "sha256": "78a8413d740928cb0cce43557a3eaa282d6e3134b2ae0be29a44d2b76e6d4166"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.svg",
+      "bytes": 13555,
+      "sha256": "479059c16ed41d22cc6992b8fa01237b531fd2468052d6dbf11bdf49fc817120"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/README.md",
+      "bytes": 3234,
+      "sha256": "d9cf851510ee88cfcad38781375a785416adde60355da37864650d1dcbd0374c"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/VALIDACION-FINAL.json",
+      "bytes": 8278,
+      "sha256": "9d8ffd050f562437bbf510a6de8558d81f0fa9327779467b732fb481b0f156c5"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/verificacion-20261115-235121.json",
+      "bytes": 24112,
+      "sha256": "da2d6a4c92c0123b050387d3429445237bac34274b4e540ade6ea0db81558483"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/verificacion-20261115-235143.json",
+      "bytes": 36456,
+      "sha256": "25faa90b71c35c9201d1ccb1b236fcc3c0f99c3a8a01d1a76588ead32be30e3d"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/verificacion-20261115-235210.json",
+      "bytes": 37289,
+      "sha256": "49a51c517063e077947fb0b3daea7348f5ab5b4fed1d33e33848eede59e7020b"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/verificacion-20261116-072844.json",
+      "bytes": 12209,
+      "sha256": "3c307fa063cda70e200abe7baf16a1af45add924707886c04e48b9c2b3a55337"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/verificacion-20261116-072902.json",
+      "bytes": 36692,
+      "sha256": "118a18943b0c5a9d1a9deb067ecd361c0584b36427d1412cb1930a9349db2688"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/VERIFICACION.md",
+      "bytes": 6504,
+      "sha256": "7fad5f6df4bddab1bfc1b68cf67bd26c62fec1ed5eaa010f046ce5a29368b0c8"
+    },
+    {
+      "archivo": "docs/hito-1/fuentes/kit-original.zip",
+      "bytes": 170744,
+      "sha256": "b15915a6b8599ce30f8dfd9ca99171ca70149e3d0762957914b747f855ce54d6"
+    },
+    {
+      "archivo": "docs/hito-1/fuentes/MANIFIESTO.json",
+      "bytes": 2525,
+      "sha256": "26b8e0b2cfe7369867135b33189336af250ef9aee4436070b65f6a61d458b777"
+    },
+    {
+      "archivo": "docs/hito-1/fuentes/README-raiz-original.md",
+      "bytes": 34,
+      "sha256": "5d6fc31c194b585d9c4a7babc57b4334878dcb0d8972ed87132152cd080375f3"
+    },
+    {
+      "archivo": "docs/hito-1/README.md",
+      "bytes": 1994,
+      "sha256": "fee4e38634d7d918a1409023e7b365a4bc664ec7e28d29e1973459774097aa82"
+    },
+    {
+      "archivo": "entorno-blue-team/compose.yaml",
+      "bytes": 1515,
+      "sha256": "72a3a23f6207117b1e1ad08417d5664b04f6d3bbb134a117ccdff39565c86039"
+    },
+    {
+      "archivo": "README.md",
+      "bytes": 11540,
+      "sha256": "7a10a830a2989bc47e4f8b34194088ea6181b0fa87390b6429981f856d5d7539"
+    },
+    {
+      "archivo": "scripts/recopilar-evidencia-h1.py",
+      "bytes": 7599,
+      "sha256": "f592cde17ec21ac4ba49dba5d5cadd5953a05981a6201ff443f578e014141e4d"
+    },
+    {
+      "archivo": "scripts/validar-h1.py",
+      "bytes": 5706,
+      "sha256": "d1563ca22aa16e6dbf3a81582440e541d63bb6302af8c38a4ae265522088b5a6"
+    }
+  ]
+}

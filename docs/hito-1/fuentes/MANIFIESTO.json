@@ -1,0 +1,75 @@
+{
+  "origen": "H1_JuiceShop_kit, Downloads del propietario",
+  "archivos": [
+    {
+      "archivo": "docs/hito-1/01-PASTA-1-2.md",
+      "bytes": 3554,
+      "sha256": "90c9792dd1e06edcac10e357421fe56bd6590f7dfd6898293c198626bc12cd1e"
+    },
+    {
+      "archivo": "docs/hito-1/02-PASTA-3-DFD.md",
+      "bytes": 3907,
+      "sha256": "d04f511004b079792764a787ce07c62493cd7456d2d6b109ea695599d65cd0ad"
+    },
+    {
+      "archivo": "docs/hito-1/03-PASTA-4-STRIDE.md",
+      "bytes": 3436,
+      "sha256": "42c9fa75ecaa3523bd68ec825523263b3a0986314eb074890fd58e4ea3a497ed"
+    },
+    {
+      "archivo": "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+      "bytes": 5489,
+      "sha256": "24685f681a7927c9fce341246194518b9dd825bd6e0733861fcfc8f4daacd015"
+    },
+    {
+      "archivo": "docs/hito-1/05-RedTeam-reconocimiento.md",
+      "bytes": 3827,
+      "sha256": "b793a93a804e6bee59619316acaa0f19edc9083721f692a6e8b0c993046716e6"
+    },
+    {
+      "archivo": "docs/hito-1/06-BlueTeam-configuracion.md",
+      "bytes": 2822,
+      "sha256": "d71422507ebfd4bdb8da724d9df807e59e3f27b9a34bf0a2172fd0ed6bcedfd1"
+    },
+    {
+      "archivo": "docs/hito-1/07-CHECKLIST.md",
+      "bytes": 1916,
+      "sha256": "149666f8d7cdb9c452b6cdd750c32104de8f97fe3735d66f945c7cdc10a2b2a3"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.dot",
+      "bytes": 2295,
+      "sha256": "67cbb100d3d23042360ae9b958672cb5dbfe03c8eeaee0e49fb19c9ac06b5e15"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.png",
+      "bytes": 161547,
+      "sha256": "dd269fbc0daf06f45cfec8958ba804897edc9bd2bb91d0153ded34b6a7a59217"
+    },
+    {
+      "archivo": "docs/hito-1/DFD-referencia.svg",
+      "bytes": 9389,
+      "sha256": "1e551aff1b73ecaf14651a4e4cc347f0a8ea1da45d4f5f1a95b1ae732cc734a1"
+    },
+    {
+      "archivo": "docs/hito-1/README.md",
+      "bytes": 1819,
+      "sha256": "2146a60ed8ef9ee791521442468409c9f7f3761e280200bf9c94e4ce2c77f8af"
+    },
+    {
+      "archivo": "docs/hito-1/evidencias/README.md",
+      "bytes": 923,
+      "sha256": "e5ef371d39eba5764e41d2a9793efe4bf8e32f569f3437bb155b4866be4d0db2"
+    },
+    {
+      "archivo": "entorno-blue-team/compose.yaml",
+      "bytes": 669,
+      "sha256": "e3a87addf8e7186ab1536084855ccb01203debb60191d2752225cb1d666a73ba"
+    },
+    {
+      "archivo": "README_PARA_COMENZAR.md",
+      "bytes": 2759,
+      "sha256": "03ac8b59dd37370a3e9636d8d147690db8bbd3b04c2711832affc67276857863"
+    }
+  ]
+}

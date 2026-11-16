@@ -1,0 +1,28 @@
+digraph H1 {
+  graph [label="OWASP Juice Shop · H1: diseño contrastado con el laboratorio\nAcceso autorizado 127.0.0.1:8081 · Sin SIEM en H1", labelloc=t, fontname="Arial", fontsize=20, rankdir=LR, bgcolor="white", pad=0.4, nodesep=0.7, ranksep=1.0, splines=polyline];
+  node [fontname="Arial", fontsize=12, style=filled, fillcolor="#ffffff", color="#31516b", penwidth=1.5];
+  edge [fontname="Arial", fontsize=10, color="#31516b", fontcolor="#294256", arrowsize=0.75];
+  client [label="A1 · Usuario / navegador\nAngular SPA\nEntradas no confiables", shape=box, fillcolor="#e9f3fc"];
+  operator [label="A2 · Operador Red / Blue\nHost y Docker: privilegiado", shape=box, fillcolor="#e9f3fc"];
+  subgraph cluster_host {
+    label="Equipo local · Docker Desktop"; fontname="Arial"; fontsize=14; color="#a0b2c2"; style="rounded,dashed"; bgcolor="#f5f8fb";
+    waf [label="P1 · WAF :8080\nApache + ModSecurity + CRS\nDetectionOnly\nRedes entrada + interna", shape=ellipse];
+    subgraph cluster_app {
+      label="Contenedor juice-shop · solo red interna (internal=true)"; fontname="Arial"; fontsize=12; color="#87ab93"; style="rounded,dashed"; bgcolor="#edf6ef";
+      app [label="P2 · Node.js / Express :3000\nAPI REST + entrega de SPA\nSin puerto publicado", shape=ellipse];
+      db [label="D1 · SQLite\ndata/juiceshop.sqlite", shape=cylinder];
+      mars [label="D2 · Colecciones MarsDB\nposts / orders\nInternas a la aplicación", shape=cylinder];
+    }
+    logs [label="D3 · Logs Docker locales\nAuditoría WAF / logs de app\nRotación 10 MB × 3 por servicio", shape=cylinder, fillcolor="#fff6e4"];
+  }
+  client -> waf [label="F01 · LC-01\nHTTP a 127.0.0.1:8081\nURL / entradas / sesión"];
+  waf -> client [label="F06 · LC-01\nRespuesta HTTP", constraint=false, color="#72869a"];
+  waf -> app [label="F02 · LC-02\nHTTP a juice-shop:3000"];
+  app -> waf [label="F05 · LC-02\nHTML / JS / JSON", constraint=false, color="#72869a"];
+  app -> db [label="F03 / F04 · LC-03\nConsultas y filas", dir=both];
+  app -> mars [label="F08 / F09 · LC-03\nOperaciones y documentos", dir=both];
+  waf -> logs [label="F07 · LC-04\nAuditoría / acceso"];
+  app -> logs [label="F12 · LC-04\nLogs de aplicación", constraint=false];
+  operator -> waf [label="F10 · Control Docker\nPlano de administración", style=dashed];
+  logs -> operator [label="F11 · LC-04\nLectura de registros", constraint=false];
+}

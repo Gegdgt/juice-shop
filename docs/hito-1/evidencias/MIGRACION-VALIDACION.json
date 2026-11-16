@@ -1,0 +1,577 @@
+{
+  "fecha": "2026-11-16T07:55:15-06:00",
+  "comandos": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "proyecto": "origen",
+      "exit_code": 0,
+      "stdout": "## main...origin/main",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "proyecto": "origen",
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (fetch)\norigin\thttps://github.com/Gegdgt/Proyecto_Final_Desarrollo_Seguro (push)",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "proyecto": "origen",
+      "exit_code": 0,
+      "stdout": "fc44a997d1f6d55a1f11576cd93be5c691c29133",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "## hito-1-integracion\n M .gitignore\n M README.md\n?? docs/\n?? entorno-blue-team/\n?? scripts/recopilar-evidencia-h1.py\n?? scripts/validar-h1.py",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/Gegdgt/juice-shop.git (fetch)\norigin\thttps://github.com/Gegdgt/juice-shop.git (push)",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "266448aba68cd8ba5915f526a128da4fa7bc3f9f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "--symref",
+        "origin",
+        "HEAD"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "ref: refs/heads/master\tHEAD\n266448aba68cd8ba5915f526a128da4fa7bc3f9f\tHEAD",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Gegdgt/juice-shop",
+        "--jq",
+        "{full_name,default_branch,fork,private,parent: .parent.full_name}"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "{\"default_branch\":\"master\",\"fork\":true,\"full_name\":\"Gegdgt/juice-shop\",\"parent\":\"juice-shop/juice-shop\",\"private\":false}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Gegdgt/juice-shop/actions/permissions"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "{\"enabled\":true,\"allowed_actions\":\"all\",\"sha_pinning_required\":false}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Gegdgt/juice-shop/actions/workflows"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "{\"total_count\":0,\"workflows\":[]}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Gegdgt/juice-shop/actions/runs",
+        "--jq",
+        "{total_count}"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "{\"total_count\":0}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "-f",
+        "entorno-blue-team/compose.yaml",
+        "config",
+        "--hash",
+        "*"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "juice-shop 772725dff021d666ce241fb031a9fe1bef5ad11c912a15d38be0dc4ca2cd10ee\nwaf d2d6128edf5c1cf18d09b429c2189b9426245c5a1b21d1943a2ed9b2e47bd1d5",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/validar-h1.py"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "{\n  \"comprobaciones_ok\": 448,\n  \"enlaces_locales\": 122,\n  \"amenazas\": 16,\n  \"requisitos\": 13,\n  \"casos\": 12,\n  \"errores\": []\n}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "proyecto": "destino",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "contenedores": [
+    {
+      "servicio": "juice-shop",
+      "id": "66ff4d7ae988e3e902f7ae668fbc6d9976cbbb5f52b799e6cb032f86fd789301",
+      "estado": "running",
+      "salud": "healthy",
+      "puertos_publicados": {},
+      "redes": [
+        "juiceshop-h1_interna"
+      ],
+      "mounts": [],
+      "ruta_creacion": "C:\\Users\\gegdg\\Documents\\.UVG\\Anio6\\SegundoSemestre\\DesarrolloSeguro\\Proyecto_Final_Desarrollo_Seguro\\entorno-blue-team",
+      "hash_configuracion": "772725dff021d666ce241fb031a9fe1bef5ad11c912a15d38be0dc4ca2cd10ee",
+      "hash_coincide": true,
+      "revision_imagen": "266448a"
+    },
+    {
+      "servicio": "waf",
+      "id": "977db99d12ec5ae4d9dceb30fb264e2f0392a1edead5555664e9f6f2579b8969",
+      "estado": "running",
+      "salud": "healthy",
+      "puertos_publicados": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8081"
+          }
+        ]
+      },
+      "redes": [
+        "juiceshop-h1_entrada",
+        "juiceshop-h1_interna"
+      ],
+      "mounts": [],
+      "ruta_creacion": "C:\\Users\\gegdg\\Documents\\.UVG\\Anio6\\SegundoSemestre\\DesarrolloSeguro\\Proyecto_Final_Desarrollo_Seguro\\entorno-blue-team",
+      "hash_configuracion": "d2d6128edf5c1cf18d09b429c2189b9426245c5a1b21d1943a2ed9b2e47bd1d5",
+      "hash_coincide": true,
+      "revision_imagen": null
+    }
+  ],
+  "codigo_vs_imagen": [
+    {
+      "archivo": "server.ts",
+      "sha256_git": "5f3407f2706724c6192e440d7bfbb73191178b2bc128aae77e1e950c7dcef4e1",
+      "sha256_imagen": "5f3407f2706724c6192e440d7bfbb73191178b2bc128aae77e1e950c7dcef4e1",
+      "coincide": true
+    },
+    {
+      "archivo": "models/index.ts",
+      "sha256_git": "180d2885756280fd389ae4ad40d7fbfead0a5c5bf44d74bc7196754c6f179cfb",
+      "sha256_imagen": "180d2885756280fd389ae4ad40d7fbfead0a5c5bf44d74bc7196754c6f179cfb",
+      "coincide": true
+    },
+    {
+      "archivo": "lib/insecurity.ts",
+      "sha256_git": "c3496760cac6a5fde403bf739a8ab5e2536d2bbc57a6e3b6a0ac50b01a6e8b8d",
+      "sha256_imagen": "c3496760cac6a5fde403bf739a8ab5e2536d2bbc57a6e3b6a0ac50b01a6e8b8d",
+      "coincide": true
+    },
+    {
+      "archivo": "data/mongodb.ts",
+      "sha256_git": "72bd8763e317801d1a3f52afae02505ae07a515dba5cdc777d5c03fcc5ad67af",
+      "sha256_imagen": "72bd8763e317801d1a3f52afae02505ae07a515dba5cdc777d5c03fcc5ad67af",
+      "coincide": true
+    },
+    {
+      "archivo": "routes/search.ts",
+      "sha256_git": "6e3272ef4065d080295d995a04964e8c5e6b1e06c4b4c8ebed3234286686ee5f",
+      "sha256_imagen": "6e3272ef4065d080295d995a04964e8c5e6b1e06c4b4c8ebed3234286686ee5f",
+      "coincide": true
+    },
+    {
+      "archivo": "routes/login.ts",
+      "sha256_git": "cf11d682edff6744bcb54339bce4b2dd6da5e80f9038facd7605df857b0a0b7b",
+      "sha256_imagen": "cf11d682edff6744bcb54339bce4b2dd6da5e80f9038facd7605df857b0a0b7b",
+      "coincide": true
+    },
+    {
+      "archivo": "frontend/src/app/app.routing.ts",
+      "sha256_git": "8b01e4efe85494d6fce7e5ea3c192a2793c1cbfc7ff7e52a8004c943e8c8384e",
+      "sha256_imagen": "8b01e4efe85494d6fce7e5ea3c192a2793c1cbfc7ff7e52a8004c943e8c8384e",
+      "coincide": true
+    },
+    {
+      "archivo": "frontend/src/app/Services/basket.service.ts",
+      "sha256_git": "63d41ef5f4e70d9d0c8c175d9061918dc964a641d63f83a54ac05641765d22f4",
+      "sha256_imagen": "63d41ef5f4e70d9d0c8c175d9061918dc964a641d63f83a54ac05641765d22f4",
+      "coincide": true
+    },
+    {
+      "archivo": "frontend/src/app/Services/user.service.ts",
+      "sha256_git": "94ad68d84127aa705a5f65a6fa9f433cc755fe255fa7e1409cc76d680b8c22fa",
+      "sha256_imagen": "94ad68d84127aa705a5f65a6fa9f433cc755fe255fa7e1409cc76d680b8c22fa",
+      "coincide": true
+    }
+  ],
+  "origen_sin_cambios": true,
+  "inventario_migracion": [
+    {
+      "origen": ".gitignore",
+      "destino": "docs/hito-1/fuentes/gitignore-proyecto-anterior.txt",
+      "sha256_destino": "5e8a0a638b70b526b9f2310fa18f60898d983aa641b848b8a3a49ed8fb1c6844",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/01-PASTA-1-2.md",
+      "destino": "docs/hito-1/01-PASTA-1-2.md",
+      "sha256_destino": "dd2e7a6e8991c4a895262218aaa9db1e20017b180a48394dd515a3df22f91084",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/02-PASTA-3-DFD.md",
+      "destino": "docs/hito-1/02-PASTA-3-DFD.md",
+      "sha256_destino": "fa07ece05821b5f546af2711d33b07c4b534b32867771535b159be5909e34672",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/03-PASTA-4-STRIDE.md",
+      "destino": "docs/hito-1/03-PASTA-4-STRIDE.md",
+      "sha256_destino": "e5702e0d78cdf9c80847f455dd32a172f0dac93662610ddbe170ba80f195b076",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+      "destino": "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+      "sha256_destino": "b4c68bab3db698f9f4049ef14d53a4c9a5ef8965d70a5effd967312514c96fa1",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/05-RedTeam-reconocimiento.md",
+      "destino": "docs/hito-1/05-RedTeam-reconocimiento.md",
+      "sha256_destino": "4766bf7a31bc84f0018fdd8db2ab349790a50e5ec0005ea7fcfefb9767e6afd5",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/06-BlueTeam-configuracion.md",
+      "destino": "docs/hito-1/06-BlueTeam-configuracion.md",
+      "sha256_destino": "29c049468c17a3dcf7e22682a9a7f27da0732621d48f34bbaac1212ca5419316",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/07-CHECKLIST.md",
+      "destino": "docs/hito-1/07-CHECKLIST.md",
+      "sha256_destino": "2f2da7210a3bd7db5e15673fb200dc8fc6eaf15a2cd3d144530b40be7e387a29",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/08-Migracion-fork.md",
+      "destino": "docs/hito-1/08-Migracion-fork.md",
+      "sha256_destino": "1a55c584541e9ab94ac893cdb470b41324bfe5a4ccc96c17f19df0c7dee6a0bd",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/09-Fuentes-y-uso-IA.md",
+      "destino": "docs/hito-1/09-Fuentes-y-uso-IA.md",
+      "sha256_destino": "e8e15126d69ba2d803820bc44d477c359294653d1532edf590ffc4a92f419643",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/DFD-referencia.dot",
+      "destino": "docs/hito-1/DFD-referencia.dot",
+      "sha256_destino": "fe71ef743626e6b9856d564b4a1ef27c290893abbdcb8fad4004a31febfee0ce",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/DFD-referencia.png",
+      "destino": "docs/hito-1/DFD-referencia.png",
+      "sha256_destino": "78a8413d740928cb0cce43557a3eaa282d6e3134b2ae0be29a44d2b76e6d4166",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/DFD-referencia.svg",
+      "destino": "docs/hito-1/DFD-referencia.svg",
+      "sha256_destino": "479059c16ed41d22cc6992b8fa01237b531fd2468052d6dbf11bdf49fc817120",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/README.md",
+      "destino": "docs/hito-1/evidencias/README.md",
+      "sha256_destino": "2ebbd051f1a34011b731e34e2a8e747686bf5f3b0bd71044627ce3312185aecb",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/evidencias/VALIDACION-FINAL.json",
+      "destino": "docs/hito-1/evidencias/VALIDACION-FINAL.json",
+      "sha256_destino": "9d8ffd050f562437bbf510a6de8558d81f0fa9327779467b732fb481b0f156c5",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/verificacion-20261115-235121.json",
+      "destino": "docs/hito-1/evidencias/verificacion-20261115-235121.json",
+      "sha256_destino": "da2d6a4c92c0123b050387d3429445237bac34274b4e540ade6ea0db81558483",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/verificacion-20261115-235143.json",
+      "destino": "docs/hito-1/evidencias/verificacion-20261115-235143.json",
+      "sha256_destino": "25faa90b71c35c9201d1ccb1b236fcc3c0f99c3a8a01d1a76588ead32be30e3d",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/verificacion-20261115-235210.json",
+      "destino": "docs/hito-1/evidencias/verificacion-20261115-235210.json",
+      "sha256_destino": "49a51c517063e077947fb0b3daea7348f5ab5b4fed1d33e33848eede59e7020b",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/verificacion-20261116-072844.json",
+      "destino": "docs/hito-1/evidencias/verificacion-20261116-072844.json",
+      "sha256_destino": "3c307fa063cda70e200abe7baf16a1af45add924707886c04e48b9c2b3a55337",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/verificacion-20261116-072902.json",
+      "destino": "docs/hito-1/evidencias/verificacion-20261116-072902.json",
+      "sha256_destino": "118a18943b0c5a9d1a9deb067ecd361c0584b36427d1412cb1930a9349db2688",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/evidencias/VERIFICACION.md",
+      "destino": "docs/hito-1/evidencias/VERIFICACION.md",
+      "sha256_destino": "1c4718e63422c621fe34a7ba9ba9b31ca7507cf2e03b8dd9c213a46569efb49c",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "docs/hito-1/fuentes/kit-original.zip",
+      "destino": "docs/hito-1/fuentes/kit-original.zip",
+      "sha256_destino": "b15915a6b8599ce30f8dfd9ca99171ca70149e3d0762957914b747f855ce54d6",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/fuentes/MANIFIESTO.json",
+      "destino": "docs/hito-1/fuentes/MANIFIESTO.json",
+      "sha256_destino": "26b8e0b2cfe7369867135b33189336af250ef9aee4436070b65f6a61d458b777",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/fuentes/README-raiz-original.md",
+      "destino": "docs/hito-1/fuentes/README-raiz-original.md",
+      "sha256_destino": "5d6fc31c194b585d9c4a7babc57b4334878dcb0d8972ed87132152cd080375f3",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "docs/hito-1/README.md",
+      "destino": "docs/hito-1/README.md",
+      "sha256_destino": "6c8fa986fc0f52494bd35bb9be8faf0f1a9a91e051b71fad689de37296b9f20c",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "entorno-blue-team/compose.yaml",
+      "destino": "entorno-blue-team/compose.yaml",
+      "sha256_destino": "72a3a23f6207117b1e1ad08417d5664b04f6d3bbb134a117ccdff39565c86039",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "README.md",
+      "destino": "docs/hito-1/fuentes/README-proyecto-anterior.txt",
+      "sha256_destino": "7a10a830a2989bc47e4f8b34194088ea6181b0fa87390b6429981f856d5d7539",
+      "identico_al_origen": true
+    },
+    {
+      "origen": "scripts/recopilar-evidencia-h1.py",
+      "destino": "scripts/recopilar-evidencia-h1.py",
+      "sha256_destino": "1aa8d3719829c57d3041581d93911a85021697e735e6386914dd1ddb6feee2d5",
+      "identico_al_origen": false
+    },
+    {
+      "origen": "scripts/validar-h1.py",
+      "destino": "scripts/validar-h1.py",
+      "sha256_destino": "6e6e80e49585f09df82fdebc145a51dee8ddf824c37ad5f53f981a648d3b4e7c",
+      "identico_al_origen": false
+    }
+  ],
+  "oficiales_modificados": [
+    ".gitignore",
+    "README.md"
+  ],
+  "contenido_oficial_conservado": {
+    "README.md": true,
+    ".gitignore": true
+  },
+  "workflows_sin_cambios": {
+    "ci.yml": true,
+    "codeql-analysis.yml": true,
+    "frontend-bundle-analysis.yml": true,
+    "image_actions.yml": true,
+    "issue-compliance.yml": true,
+    "lint-fixer.yml": true,
+    "lock.yml": true,
+    "pr-compliance.yml": true,
+    "rebase.yml": true,
+    "release.yml": true,
+    "stale.yml": true,
+    "update-challenges-ebook.yml": true,
+    "update-challenges-www-legacy.yml": true,
+    "update-challenges-www.yml": true,
+    "update-news-www-legacy.yml": true,
+    "update-news-www.yml": true
+  },
+  "sintaxis_python": {
+    "validar-h1.py": "ok",
+    "recopilar-evidencia-h1.py": "ok"
+  },
+  "kit_integridad": true,
+  "pruebas_oficiales": [
+    {
+      "comando": "npm run lint",
+      "exit_code": 1,
+      "resultado": "eslint is not recognized; node_modules ausente"
+    },
+    {
+      "comando": "npm test",
+      "exit_code": 1,
+      "resultado": "ng is not recognized; frontend/node_modules ausente"
+    }
+  ],
+  "revision_secretos": {
+    "archivos_candidatos": 36,
+    "miembros_zip": 14,
+    "patrones": [
+      "private_key",
+      "github_token",
+      "jwt",
+      "credential_url",
+      "assigned_secret"
+    ],
+    "hallazgos_sin_valores": [],
+    "alcance": "Archivos H1, README y .gitignore; ZIP incluido. No es garantia de ausencia de secretos."
+  },
+  "espacios_finales_archivos_nuevos_y_modificados": [
+    {
+      "file": "README.md",
+      "line": 160,
+      "preexistente_en_base": true
+    }
+  ],
+  "archivos_nuevos": [
+    "docs/hito-1/01-PASTA-1-2.md",
+    "docs/hito-1/02-PASTA-3-DFD.md",
+    "docs/hito-1/03-PASTA-4-STRIDE.md",
+    "docs/hito-1/04-Requisitos-y-casos-de-abuso.md",
+    "docs/hito-1/05-RedTeam-reconocimiento.md",
+    "docs/hito-1/06-BlueTeam-configuracion.md",
+    "docs/hito-1/07-CHECKLIST.md",
+    "docs/hito-1/08-Migracion-fork.md",
+    "docs/hito-1/09-Fuentes-y-uso-IA.md",
+    "docs/hito-1/DFD-referencia.dot",
+    "docs/hito-1/DFD-referencia.png",
+    "docs/hito-1/DFD-referencia.svg",
+    "docs/hito-1/GUIA-PROYECTO.md",
+    "docs/hito-1/README.md",
+    "docs/hito-1/evidencias/MIGRACION-VALIDACION.json",
+    "docs/hito-1/evidencias/MIGRACION.md",
+    "docs/hito-1/evidencias/README.md",
+    "docs/hito-1/evidencias/VALIDACION-FINAL.json",
+    "docs/hito-1/evidencias/VERIFICACION.md",
+    "docs/hito-1/evidencias/verificacion-20261115-235121.json",
+    "docs/hito-1/evidencias/verificacion-20261115-235143.json",
+    "docs/hito-1/evidencias/verificacion-20261115-235210.json",
+    "docs/hito-1/evidencias/verificacion-20261116-072844.json",
+    "docs/hito-1/evidencias/verificacion-20261116-072902.json",
+    "docs/hito-1/evidencias/verificacion-20261116-075021.json",
+    "docs/hito-1/fuentes/MANIFIESTO-MIGRACION.json",
+    "docs/hito-1/fuentes/MANIFIESTO.json",
+    "docs/hito-1/fuentes/README-proyecto-anterior.txt",
+    "docs/hito-1/fuentes/README-raiz-original.md",
+    "docs/hito-1/fuentes/gitignore-proyecto-anterior.txt",
+    "docs/hito-1/fuentes/kit-original.zip",
+    "entorno-blue-team/compose.yaml",
+    "scripts/recopilar-evidencia-h1.py",
+    "scripts/validar-h1.py"
+  ],
+  "archivos_modificados": [
+    ".gitignore",
+    "README.md"
+  ],
+  "sin_staging": true,
+  "estado_docker_final": [
+    "juiceshop-h1-waf-1 Up 27 minutes (healthy) 127.0.0.1:8081->8080/tcp",
+    "juiceshop-h1-juice-shop-1 Up 27 minutes (healthy) 3000/tcp"
+  ],
+  "archivos_temporales_o_sensibles_en_candidatos": [],
+  "enlaces_html_y_referencia": [],
+  "origen_git_status_final": "## main...origin/main",
+  "git_diff_check_final": 0,
+  "resultado_h1": {
+    "comprobaciones_ok": 448,
+    "enlaces_locales": 122,
+    "amenazas": 16,
+    "requisitos": 13,
+    "casos": 12,
+    "errores": []
+  }
+}

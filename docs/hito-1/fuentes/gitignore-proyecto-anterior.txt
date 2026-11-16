@@ -1,0 +1,59 @@
+# Dependencias y resultados generados; preservar lockfiles y fuentes.
+node_modules/
+/dist/
+/build/
+/frontend/dist/
+/frontend/.angular/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+.cache/
+__pycache__/
+*.pyc
+
+# Configuraciones privadas; ejemplos reproducibles permitidos.
+.env
+.env.*
+!.env.example
+!.env.*.example
+/.secrets/
+/secrets/
+/entorno-blue-team/**/*.key
+*.private.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials.local.json
+
+# Ejecución local: no ocultar bases de datos/fixtures originales de Juice Shop.
+*.log
+/entorno-blue-team/runtime/
+/entorno-blue-team/data/
+/entorno-blue-team/elastic-data/
+/entorno-blue-team/logs/
+/data/*.sqlite
+/data/*.sqlite-journal
+/data/*.sqlite-wal
+/data/*.sqlite-shm
+/data/*.db
+/tmp/
+*.tmp
+*.swp
+*.swo
+
+# Sistema y ajustes personales del editor.
+Thumbs.db
+Desktop.ini
+.DS_Store
+/.idea/
+/.vs/
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/tasks.json
+!/.vscode/launch.json
+*.code-workspace
+
+# Capturas sanitizadas sí se versionan; HAR y sesiones crudas son privadas.
+/docs/hito-1/evidencias/privado/
+*.har

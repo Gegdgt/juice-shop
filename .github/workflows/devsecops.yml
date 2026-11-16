@@ -1,0 +1,182 @@
+# =====================================================================
+# Pipeline DevSecOps — Proyecto Final Integrador (Hito 2)
+# Fork Gegdgt/juice-shop · UVG · Desarrollo Seguro
+# =====================================================================
+# Parte de la plantilla del curso (plantilla-pipeline/devsecops.yml).
+# Se conservan los cuatro jobs, el gate y los artefactos. Lo adaptado a
+# Juice Shop está marcado con  [Juice Shop].
+#
+# Controles:   SAST (Semgrep) · SCA (npm audit) ·
+#              SBOM (Syft, CycloneDX) · DAST (ZAP baseline)
+#
+# El baseline es el control automático del grupo. La sesión de escritorio
+# del Equipo rojo (ZAP + Burp contra localhost:8080) se entrega además
+# en docs/hito-2.
+#
+# Security gate:
+#   SECURITY_GATE: "reporte"  -> corre los controles y publica los reportes,
+#                                pero NO falla por hallazgos.
+#   SECURITY_GATE: "bloqueo"  -> falla si un control supera su umbral.
+#
+# Umbrales (justificados en docs/hito-2/README.md):
+#   SAST: hallazgos de severidad ERROR · SCA: vulnerabilidades high o critical
+#   DAST: alertas de ZAP de riesgo alto
+#
+# Juice Shop es vulnerable a propósito: en "bloqueo" el pipeline quedaría
+# rojo en cada push. En "reporte" solo falla si una herramienta no puede correr.
+# =====================================================================
+name: DevSecOps
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SECURITY_GATE: "reporte"
+  # [Juice Shop] Mismas versiones que el Dockerfile y el CI original del proyecto.
+  # Con npm 10 falla la generación del lockfile del frontend.
+  NODE_VERSION: 24
+  NPM_VERSION: 11.19.1
+
+jobs:
+  # ── SAST ───────────────────────────────────────────────────────────
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - name: Semgrep (reporte SARIF)
+        run: semgrep scan --config p/default --config p/owasp-top-ten --sarif --output semgrep.sarif
+      - name: Semgrep (gate)
+        continue-on-error: ${{ env.SECURITY_GATE != 'bloqueo' }}
+        run: semgrep scan --config p/default --config p/owasp-top-ten --severity ERROR --error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep
+          path: semgrep.sarif
+
+  # ── SCA ────────────────────────────────────────────────────────────
+  sca:
+    name: SCA (npm audit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Usar el npm del proyecto
+        run: npm install --global npm@${{ env.NPM_VERSION }}
+      # [Juice Shop] El repo no versiona package-lock.json (.npmrc: package-lock=false)
+      # y npm audit lo exige. Se genera aquí, sin instalar ni ejecutar scripts.
+      # Hay dos proyectos npm: el servidor (raíz) y el frontend Angular.
+      - name: Generar lockfiles
+        run: |
+          npm install --package-lock-only --package-lock=true --ignore-scripts --no-audit --no-fund
+          cd frontend
+          npm install --package-lock-only --package-lock=true --ignore-scripts --no-audit --no-fund
+      - name: Auditoría (reporte)
+        run: |
+          npm audit --omit=dev --package-lock=true --json > npm-audit.json || true
+          (cd frontend && npm audit --omit=dev --package-lock=true --json > ../npm-frontend-audit.json) || true
+          # npm audit sale con 1 cuando hay vulnerabilidades. Si el reporte no
+          # tiene el resumen, la herramienta no corrió: eso sí debe fallar.
+          jq -e '.metadata.vulnerabilities' npm-audit.json
+          jq -e '.metadata.vulnerabilities' npm-frontend-audit.json
+      - name: Auditoría (gate)
+        continue-on-error: ${{ env.SECURITY_GATE != 'bloqueo' }}
+        run: |
+          # El umbral es high o critical, leído de los dos reportes JSON.
+          altos=$(jq -s 'map(.metadata.vulnerabilities.high + .metadata.vulnerabilities.critical) | add' npm-audit.json npm-frontend-audit.json)
+          echo "Vulnerabilidades high o critical (servidor + frontend): $altos"
+          test "$altos" -eq 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sca
+          path: "*-audit.json"
+
+  # ── SBOM ───────────────────────────────────────────────────────────
+  sbom:
+    name: SBOM (Syft, CycloneDX)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Usar el npm del proyecto
+        run: npm install --global npm@${{ env.NPM_VERSION }}
+      # [Juice Shop] Sin lockfiles Syft no ve las dependencias npm.
+      - name: Generar lockfiles
+        run: |
+          npm install --package-lock-only --package-lock=true --ignore-scripts --no-audit --no-fund
+          cd frontend
+          npm install --package-lock-only --package-lock=true --ignore-scripts --no-audit --no-fund
+      - name: Generar SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          artifact-name: sbom.cdx.json      # queda como artefacto del pipeline
+
+  # ── DAST ───────────────────────────────────────────────────────────
+  # ZAP baseline: control automático del grupo. La sesión de escritorio del
+  # Equipo rojo (ZAP + Burp contra http://localhost:8080) se entrega además,
+  # en docs/hito-2, junto con este artefacto.
+  dast:
+    name: DAST (ZAP baseline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      # [Juice Shop] El puerto 8080 es el del WAF del Hito 3. Aquí se escanea
+      # la aplicación directo en el runner, en su puerto 3000.
+      APP_URL: http://localhost:3000
+      HEALTH_URL: http://localhost:3000/rest/admin/application-version
+    steps:
+      - uses: actions/checkout@v4
+      # [Juice Shop] Se construye la imagen con el Dockerfile del fork, para que
+      # el escaneo corra sobre el código de este repositorio (y vea las
+      # correcciones del Hito 4). Tarda varios minutos.
+      - name: Construir la imagen desde el código del fork
+        run: docker build -t juice-shop-fork .
+      - name: Levantar la aplicación
+        run: docker run -d --name juice-shop -p 3000:3000 juice-shop-fork
+      - name: Esperar a que la app responda
+        run: |
+          for i in $(seq 1 40); do
+            if curl -sf "$APP_URL" > /dev/null && curl -sf "$HEALTH_URL" > /dev/null; then
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "La app no respondió (web $APP_URL, API $HEALTH_URL)"
+          docker logs juice-shop
+          exit 1
+      - name: ZAP baseline
+        run: |
+          mkdir -p zap && chmod 777 zap
+          docker run --rm --network host -v "$PWD/zap:/zap/wrk:rw" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t "$APP_URL" -r reporte-zap.html -J reporte-zap.json -I \
+            || echo "ZAP terminó con hallazgos"
+      - name: ZAP (gate)
+        continue-on-error: ${{ env.SECURITY_GATE != 'bloqueo' }}
+        run: |
+          # Falla si ZAP reportó alertas de riesgo alto (riskcode 3)
+          altos=$(jq '[.site[].alerts[] | select(.riskcode == "3")] | length' zap/reporte-zap.json)
+          echo "Alertas de riesgo alto: $altos"
+          test "$altos" -eq 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap
+          path: zap/

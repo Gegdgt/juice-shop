@@ -9,8 +9,8 @@
 - [x] Gegdgt (Red) y Sebas Juárez (Blue) documentados.
 - [x] Grupo de dos integrantes: un Red Team y un Blue Team.
 - [x] Entregables integrados localmente en `hito-1-integracion`, basada en `origin/master`.
-- [x] Los 16 YAML oficiales de workflows se conservan sin cambios.
-- [ ] Deshabilitar Actions en el fork antes de publicar y verificar `enabled=false`; actualmente la API devuelve `enabled=true` y cero workflows enumerados.
+- [x] Los 16 YAML oficiales de workflows se conservan sin editar; en H2 se movieron a `.github/workflows-upstream/` para deshabilitarlos.
+- [ ] Confirmar en la pestaña Actions del fork que solo corre `devsecops.yml`.
 - [x] Compose válido: dos servicios, red interna privada y referencias por digest.
 - [x] Arranque y respuesta HTTP real a través del WAF verificados en 8081, alternativa autorizada al puerto ocupado 8080.
 - [x] Backend sin publicación al host; solo WAF publica 127.0.0.1:8081.

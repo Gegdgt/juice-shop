@@ -1,27 +1,39 @@
 # Hito 2 · Pipeline y ataque
 
-Copien esta carpeta a `docs/hito-2/` del repositorio de su aplicación.
-El workflow vive en `.github/workflows/`, no aquí: partan de
-[`plantilla-pipeline/devsecops.yml`](../../../plantilla-pipeline/devsecops.yml).
+**Estado:** pipeline adaptado, pendiente de su primera corrida. PoC del Equipo rojo pendientes.
 
 ## Pipeline
 
-- Workflow: `.github/workflows/devsecops.yml`
-- Corrida de evidencia (enlace a GitHub Actions):
-- Modo del gate: `reporte` o `bloqueo`
-- Umbral y por qué ese umbral (lo justifican los cuatro; el Equipo azul participa):
+- Workflow: [`.github/workflows/devsecops.yml`](../../.github/workflows/devsecops.yml), adaptado de la plantilla del curso.
+- Corrida de evidencia (enlace a GitHub Actions): *pendiente; pegar aquí el enlace de la primera corrida completa.*
+- Modo del gate: `reporte`.
+- Workflows originales: los 16 del proyecto se movieron, sin editarlos, a [`.github/workflows-upstream/`](../../.github/workflows-upstream/README.md). GitHub Actions solo ejecuta lo que está en `.github/workflows/`, así que quedan deshabilitados.
+
+### Qué se adaptó a Juice Shop
+
+Se conservan los cuatro jobs, el gate y los artefactos de la plantilla.
+
+| Job | Cambio | Por qué |
+|---|---|---|
+| SAST | Ninguno | Semgrep recorre el árbol de archivos; no depende de npm |
+| SCA | Genera los lockfiles en el runner y audita dos proyectos: el servidor (raíz) y `frontend/`. El gate suma high y critical leyendo los dos JSON | El repo no versiona `package-lock.json` (`.npmrc`: `package-lock=false`) y `npm audit` lo exige. Se usa npm 11.19.1, el del CI original: con npm 10 falla el lockfile del frontend |
+| SBOM | Genera los lockfiles antes de correr Syft | Sin lockfile, Syft no ve las dependencias npm |
+| DAST | Construye la imagen con el `Dockerfile` del fork, la levanta en el puerto 3000 y espera dos URL antes de escanear | El escaneo corre sobre el código de este repositorio, no sobre la imagen pública, y así verá las correcciones del Hito 4. El 8080 es el del WAF y no se usa en el runner |
+
+### Umbral del gate y justificación
+
+Propuesta del Equipo azul, pendiente de acordar entre los dos.
 
 | Control | Herramienta | Umbral | Qué hicieron con los hallazgos |
 |---|---|---|---|
-| SAST | Semgrep |  |  |
-| SCA |  |  |  |
-| SBOM | Syft, CycloneDX | El artefacto `sbom.cdx.json` se publica |  |
-| DAST | ZAP baseline, o paso manual |  |  |
+| SAST | Semgrep (`p/default` y `p/owasp-top-ten`) | 0 hallazgos de severidad ERROR | Pendiente de la primera corrida. Revisar si aparecen V-01 y V-02 de la [etapa V](../hito-1/03b-PASTA-5-Vulnerabilidades.md) |
+| SCA | `npm audit`, solo dependencias de producción | 0 vulnerabilidades high o critical | Línea base medida en local el 16 de noviembre de 2026 con los mismos comandos: servidor 12 high y 6 critical; frontend 1 high. Se confirma con el artefacto `sca` |
+| SBOM | Syft, CycloneDX | El artefacto `sbom.cdx.json` se publica | Inventario de componentes; no tiene umbral |
+| DAST | ZAP baseline | 0 alertas de riesgo alto | Pendiente de la primera corrida |
 
-*Instrucción: si el DAST no corre dentro del pipeline, escriban aquí por qué y
-dónde está el reporte manual. Ese job es el control automático del grupo. La
-sesión de ZAP y Burp del Equipo rojo va en la sección siguiente, y las dos se
-entregan.*
+**Por qué `reporte` y no `bloqueo`.** Juice Shop es vulnerable a propósito. Con 19 dependencias high o critical de línea base, el modo `bloqueo` dejaría el pipeline en rojo en cada push sin decir nada nuevo. En `reporte` los controles corren, publican sus reportes y el pipeline solo falla si una herramienta no puede ejecutarse. Los umbrales quedan escritos para el Hito 4: una corrección no debe sumar hallazgos sobre esta línea base.
+
+**Uso de IA.** El workflow se adaptó con Claude (Anthropic, modelo Claude Fable 5.2) a partir de la plantilla del curso. Los comandos de SCA se probaron en local; los jobs de SAST, SBOM y DAST no se han ejecutado todavía. El grupo revisa el diff antes de darlo por bueno.
 
 ## PoC del Equipo rojo
 

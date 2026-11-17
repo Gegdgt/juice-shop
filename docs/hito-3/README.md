@@ -1,6 +1,6 @@
 # Hito 3 · Detección y respuesta
 
-El export de Kibana (reglas `DET-*` y dashboard) está en [`waf-siem/kibana-export.ndjson`](../../waf-siem/kibana-export.ndjson).
+El export de Kibana (reglas `DET-*` y dashboard) está en [`waf-siem/kibana-export.ndjson`](../../waf-siem/kibana-export.ndjson) (Stack Management → Saved Objects → Export, captura [`08-saved-objects-export.png`](08-saved-objects-export.png)).
 
 **Conexión app–WAF: opción B.** Juice Shop corre como el servicio `app` del `docker-compose.yml` con `expose: 3000` y sin `ports:`, así que desde fuera solo se llega por el WAF en `127.0.0.1:8080`. El puerto 3000 no queda publicado en la máquina; el único que puede saltarse el WAF es otro contenedor de la misma red de Docker, que en este entorno son solo Elastic, Kibana y Filebeat. El WAF escucha en `127.0.0.1` (`WAF_BIND`), no en la red de la universidad.
 

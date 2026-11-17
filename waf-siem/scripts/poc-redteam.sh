@@ -10,6 +10,12 @@ set -u
 WAF_URL="${WAF_URL:-http://127.0.0.1:8080}"
 MODO="$(grep -E '^MODSEC_RULE_ENGINE=' "$(dirname "$0")/../.env" 2>/dev/null | cut -d= -f2)"
 
+# Espera a que el WAF responda (tras "docker compose up -d waf" tarda unos segundos)
+for _ in $(seq 1 30); do
+  c="$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 "$WAF_URL/rest/admin/application-version" || true)"
+  [ "$c" = "200" ] && break; sleep 1
+done
+
 echo "=== PoC del Equipo rojo por el WAF ($WAF_URL) | modo: ${MODO:-?} ==="
 echo "Fecha: $(date '+%Y-%m-%d')  (hora local GT y UTC en cada fila)"
 echo
@@ -53,5 +59,5 @@ C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 -X PROPFIND "$WAF_URL/
 fila DET-03 PROPFIND /rest/products/search "método fuera de ALLOWED_METHODS" "$C"
 
 echo
-echo "Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 405/404 (lo responde la app)."
+echo "Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 500 (la app no conoce PROPFIND)."
 echo "Esperado en On:            PoC-01 403, PoC-02 403, PoC-03 200 (lo corrige el H4), DET-02 403, DET-03 403."

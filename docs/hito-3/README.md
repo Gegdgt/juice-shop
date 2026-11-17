@@ -33,19 +33,41 @@ El UNION SQLi dispara varias reglas de la familia 942 más el umbral 949110. El 
   4. Top de `client_ip`: de dónde vienen.
 - Captura: [`05-dashboard-waf.png`](05-dashboard-waf.png)
 
+## Detección y bloqueo con ataques reales
+
+Los mismos ataques se lanzaron dos veces con `waf-siem/scripts/poc-redteam.sh`: primero con el WAF en `DetectionOnly` (registra y deja pasar) y luego en `On` (bloquea). Hora local de Guatemala; el log de auditoría del WAF guarda la hora en UTC (+6 h).
+
+| Ataque | Payload | Regla que lo detecta | DetectionOnly | On |
+|---|---|---|---|---|
+| PoC-01 SQLi en el login | `email=' OR 1=1--` | DET-01 (942100) | 07:50:26 → 200 | 08:02:21 → **403** |
+| PoC-02 UNION SQLi en la búsqueda | `q=qwert')) UNION SELECT id, email, password, '4',…,'10' FROM Users--` | DET-01 (942100, 942190, 942270) | 07:50:28 → 200 | 08:02:23 → **403** |
+| XSS en la búsqueda | `q=<script>alert(1)</script>` | DET-02 (941100, 941110, 941160, 941390) | 07:50:33 → 200 | 08:02:27 → **403** |
+| Método no permitido | `PROPFIND /rest/products/search` | DET-03 (911100) | 07:50:35 → 500 (lo responde la app) | 08:02:29 → **403** |
+| PoC-03 IDOR del carrito | `GET /rest/basket/1` con token de jim | ninguna | 07:50:31 → 200 | 08:02:25 → 200 |
+
+El IDOR pasa en los dos modos y es lo correcto desde el punto de vista del WAF: la petición es válida, solo cambia un id. Se corrige en el código en el Hito 4.
+
+Salidas completas: [`poc-DetectionOnly.txt`](poc-DetectionOnly.txt), [`poc-On.txt`](poc-On.txt). Captura del bloqueo: [`06-waf-403-bloqueo.png`](06-waf-403-bloqueo.png).
+
 ## Exclusiones
 
-*Instrucción: el WAF ya está en `MODSEC_RULE_ENGINE=On`. Cada fila es un falso
-positivo encontrado usando la app como usuario normal. La exclusión más pequeña
-posible; no se apaga el CRS. Los tipos y qué investigar si el ejemplo no
-aplica están en la guía del Equipo azul, sección Exclusiones.*
+Con el WAF en `On` se usó la app como cliente normal con `waf-siem/scripts/flujo-usuario.sh` (registro, login, carrito, dirección, tarjeta de prueba, reseña, feedback, queja con PDF, checkout y cambio de contraseña). La primera vuelta dio 5 bloqueos en acciones legítimas ([`flujo-usuario-antes.txt`](flujo-usuario-antes.txt)); `waf-siem/scripts/ver-bloqueos.sh` mostró qué regla los causó ([`bloqueos-antes.txt`](bloqueos-antes.txt)). El CRS sigue completo y en paranoia 1; no se desactivó ninguna familia de reglas.
 
 | Regla | Ruta o parámetro | Qué se excluyó | Por qué es legítimo | Archivo |
 |---|---|---|---|---|
-|  |  |  |  | `waf-siem/waf/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf` |
+| 911100 (método no permitido) | `PUT /api/BasketItems/:id`, `DELETE /api/BasketItems/:id`, `PUT /rest/products/:id/reviews`, `PATCH /rest/products/reviews` | Nada en el CRS: se agregaron `PUT PATCH DELETE` a `ALLOWED_METHODS` (tipo 4). | Son los métodos REST que usa la propia SPA para cambiar la cantidad, quitar productos, escribir y editar reseñas. Riesgo aceptado: esos tres métodos se aceptan en todas las rutas; la autorización de cada ruta la sigue haciendo la app. Métodos raros como `PROPFIND`, `TRACE` o `CONNECT` siguen bloqueados (DET-03). | `waf-siem/.env` (y `.env.example`) |
+| 932260 (RCE: comando Unix directo) | `REQUEST_FILENAME` en `/rest/user/whoami` | Solo el target `REQUEST_FILENAME` de la 932260, solo en esa ruta exacta (`@streq`), regla `id:10002`. | La regla confunde el nombre del endpoint con el comando `whoami`. La SPA lo llama en cada carga para saber quién está logueado. Riesgo aceptado: en esa ruta la 932260 no revisa el nombre del archivo; parámetros, cookies y cabeceras siguen evaluados. | `waf-siem/waf/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf` |
+
+Efecto secundario que no es falso positivo: el feedback y la queja dieron 400 en la primera vuelta porque, sin la respuesta de `whoami`, el script mandó un JSON con `UserId` vacío y el WAF lo rechazó con la regla 200002 (cuerpo que no se puede parsear). Ese rechazo es correcto. Al arreglar `whoami` el JSON va completo y pasan.
+
+Después del ajuste, la misma vuelta no tiene ningún 403 en acciones legítimas ([`flujo-usuario-despues.txt`](flujo-usuario-despues.txt)) y los ataques siguen bloqueados ([`poc-On.txt`](poc-On.txt)). Captura: [`07-exclusion-falso-positivo.png`](07-exclusion-falso-positivo.png).
 
 ## Demo Purple Team
 
-- PoC que se repite en vivo:
-- Hora acordada:
-- Qué muestra el Equipo azul (detección y bloqueo):
+- PoC que se repite en vivo: PoC-02 (UNION SQLi en la búsqueda) desde Burp o Postman por `:8080`, y PoC-01 como respaldo.
+- Hora acordada: durante la presentación; la hora exacta de cada intento queda en `poc-redteam.sh` y en Kibana.
+- Qué muestra el Equipo azul: el 403 en la respuesta, el evento en Discover con `DET-01 SQLi` (ruleId, payload y hora) y el pico en el dashboard `WAF - Blue Team`. Para contrastar, una acción normal (agregar al carrito) responde 200.
+
+## Uso de IA
+
+Los scripts `poc-redteam.sh`, `flujo-usuario.sh` y `ver-bloqueos.sh`, la exclusión `id:10002` y la redacción de este README se hicieron con ayuda de Claude (Anthropic). Las corridas, las capturas y la revisión de cada regla en Kibana las hizo Sebas.

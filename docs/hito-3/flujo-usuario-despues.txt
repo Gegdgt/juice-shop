@@ -1,0 +1,31 @@
+=== Flujo de usuario normal por el WAF (http://127.0.0.1:8080) | inicio 08:06:30 hora local ===
+08:06:30 | HTTP 200 | GET    /                                             | Inicio (SPA)
+08:06:31 | HTTP 200 | GET    /rest/admin/application-version               | Versión de la app
+08:06:32 | HTTP 200 | GET    /api/Products                                 | Catálogo
+08:06:33 | HTTP 200 | GET    /rest/products/search?q=jugo%20de%20manzana   | Búsqueda normal
+08:06:34 | HTTP 200 | GET    /api/SecurityQuestions/                       | Preguntas de seguridad
+08:06:36 | HTTP 201 | POST   /api/Users                                    | Registro
+08:06:37 | HTTP 200 | POST   /rest/user/login                              | Login
+08:06:38 | HTTP 200 | GET    /rest/user/whoami                             | Quién soy
+08:06:39 | HTTP 200 | POST   /api/BasketItems                              | Agregar producto 1
+08:06:40 | HTTP 200 | PUT    /api/BasketItems/13                           | Cambiar cantidad
+08:06:41 | HTTP 200 | POST   /api/BasketItems                              | Agregar producto 2
+08:06:42 | HTTP 200 | DELETE /api/BasketItems/14                           | Quitar producto 2
+08:06:43 | HTTP 200 | GET    /rest/basket/8                                | Ver mi carrito
+08:06:44 | HTTP 201 | POST   /api/Addresss                                 | Nueva dirección
+08:06:45 | HTTP 201 | POST   /api/Cards                                    | Nueva tarjeta (de prueba)
+08:06:46 | HTTP 201 | PUT    /rest/products/1/reviews                      | Escribir reseña
+08:06:47 | HTTP 200 | GET    /rest/products/1/reviews                      | Leer reseñas
+08:06:48 | HTTP 200 | PATCH  /rest/products/reviews                        | Editar reseña
+08:06:49 | HTTP 200 | GET    /rest/captcha/                                | Captcha
+08:06:51 | HTTP 400 | POST   /api/Feedbacks                                | Enviar feedback
+08:06:52 | HTTP 204 | POST   /file-upload                                  | Subir PDF de la queja
+08:06:53 | HTTP 400 | POST   /api/Complaints                               | Enviar queja
+08:06:54 | HTTP 200 | GET    /api/Deliverys                                | Métodos de entrega
+08:06:55 | HTTP 200 | POST   /rest/basket/8/checkout                       | Pagar (checkout)
+08:06:56 | HTTP 200 | GET    /rest/order-history                           | Historial de pedidos
+08:06:57 | HTTP 200 | GET    /rest/user/change-password?current=Cliente.2026%21&new=Cliente.2026%21b&repeat=Cliente.2026%21b | Cambiar contraseña
+08:06:58 | HTTP 200 | POST   /rest/user/login                              | Login con la nueva
+
+Ventana para Kibana: desde 2026-11-17T14:06:30Z hasta 2026-11-17T14:06:59Z (UTC)
+Sin 403: ninguna acción legítima fue bloqueada.

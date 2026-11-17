@@ -1,0 +1,38 @@
+=== Flujo de usuario normal por el WAF (http://127.0.0.1:8080) | inicio 07:50:54 hora local ===
+07:50:54 | HTTP 200 | GET    /                                             | Inicio (SPA)
+07:50:55 | HTTP 200 | GET    /rest/admin/application-version               | Versión de la app
+07:50:56 | HTTP 200 | GET    /api/Products                                 | Catálogo
+07:50:57 | HTTP 200 | GET    /rest/products/search?q=jugo%20de%20manzana   | Búsqueda normal
+07:50:58 | HTTP 200 | GET    /api/SecurityQuestions/                       | Preguntas de seguridad
+07:50:59 | HTTP 201 | POST   /api/Users                                    | Registro
+07:51:00 | HTTP 200 | POST   /rest/user/login                              | Login
+07:51:01 | HTTP 403 | GET    /rest/user/whoami                             | Quién soy  <-- 403: posible falso positivo
+07:51:02 | HTTP 200 | POST   /api/BasketItems                              | Agregar producto 1
+07:51:03 | HTTP 403 | PUT    /api/BasketItems/9                            | Cambiar cantidad  <-- 403: posible falso positivo
+07:51:04 | HTTP 200 | POST   /api/BasketItems                              | Agregar producto 2
+07:51:05 | HTTP 403 | DELETE /api/BasketItems/10                           | Quitar producto 2  <-- 403: posible falso positivo
+07:51:06 | HTTP 200 | GET    /rest/basket/6                                | Ver mi carrito
+07:51:07 | HTTP 201 | POST   /api/Addresss                                 | Nueva dirección
+07:51:08 | HTTP 201 | POST   /api/Cards                                    | Nueva tarjeta (de prueba)
+07:51:09 | HTTP 403 | PUT    /rest/products/1/reviews                      | Escribir reseña  <-- 403: posible falso positivo
+07:51:11 | HTTP 200 | GET    /rest/products/1/reviews                      | Leer reseñas
+07:51:12 | HTTP 403 | PATCH  /rest/products/reviews                        | Editar reseña  <-- 403: posible falso positivo
+07:51:13 | HTTP 200 | GET    /rest/captcha/                                | Captcha
+07:51:14 | HTTP 400 | POST   /api/Feedbacks                                | Enviar feedback
+07:51:15 | HTTP 204 | POST   /file-upload                                  | Subir PDF de la queja
+07:51:16 | HTTP 400 | POST   /api/Complaints                               | Enviar queja
+07:51:17 | HTTP 200 | GET    /api/Deliverys                                | Métodos de entrega
+07:51:18 | HTTP 200 | POST   /rest/basket/6/checkout                       | Pagar (checkout)
+07:51:19 | HTTP 200 | GET    /rest/order-history                           | Historial de pedidos
+07:51:20 | HTTP 200 | GET    /rest/user/change-password?current=Cliente.2026%21&new=Cliente.2026%21b&repeat=Cliente.2026%21b | Cambiar contraseña
+07:51:21 | HTTP 200 | POST   /rest/user/login                              | Login con la nueva
+
+Ventana para Kibana: desde 2026-11-17T13:50:54Z hasta 2026-11-17T13:51:22Z (UTC)
+403 en acciones legítimas (5):
+  - 07:51:01 GET /rest/user/whoami (Quién soy)
+  - 07:51:03 PUT /api/BasketItems/9 (Cambiar cantidad)
+  - 07:51:05 DELETE /api/BasketItems/10 (Quitar producto 2)
+  - 07:51:09 PUT /rest/products/1/reviews (Escribir reseña)
+  - 07:51:12 PATCH /rest/products/reviews (Editar reseña)
+En Kibana (Discover, esa ventana): fields.fuente : "waf-audit" -> abran cada evento y lean
+modsec.transaction.messages.details.ruleId y data. El 949110 es el umbral: la exclusión va sobre la otra regla.

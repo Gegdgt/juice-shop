@@ -1,6 +1,6 @@
 # Hito 2 · Pipeline y ataque
 
-**Estado:** pipeline funcionando desde la corrida #1 (16 de noviembre de 2026). PoC del Equipo rojo pendientes.
+**Estado:** pipeline funcionando desde la corrida #1 (16 de noviembre de 2026). Tres PoC confirmados en Burp y repetidos con curl en los dos modos del WAF (salidas en `docs/hito-3/poc-*.txt`).
 
 ## Pipeline
 
@@ -102,6 +102,9 @@ Una fila por intento. Las horas están en hora local de Guatemala (UTC−6). Se 
 | 2026-11-17 | 01:02 | Sebas | Burp | `POST /rest/user/login` | `' OR 1=1--` | 200, token de admin (784 B) |
 | 2026-11-17 | 01:08 | Sebas | Burp | `GET /rest/products/search?q=` | `qwert')) UNION SELECT … FROM Users--` | 200, credenciales (4978 B) |
 | 2026-11-17 | 01:10 | Sebas | Burp | `GET /rest/basket/1` | token propio, id ajeno | 200, carrito ajeno (1994 B) |
-| 2026-11-17 | __:__ | Sebas | Postman | `POST /rest/user/login` | `poc_sqli_login` | *pendiente de repetir* |
-| 2026-11-17 | __:__ | Sebas | Postman | `GET /rest/products/search?q=` | `poc_busqueda` | *pendiente de repetir* |
-| 2026-11-17 | __:__ | Sebas | Postman | `GET /rest/basket/1` | `poc_basket_ajeno` | *pendiente de repetir* |
+| 2026-11-17 | 07:50:26 | Sebas | curl (`waf-siem/scripts/poc-redteam.sh`), WAF en DetectionOnly | `POST /rest/user/login` | `' OR 1=1--` | 200 (pasa; detectado por 942100) |
+| 2026-11-17 | 07:50:28 | Sebas | curl, WAF en DetectionOnly | `GET /rest/products/search?q=` | `qwert')) UNION SELECT … FROM Users--` | 200 (pasa; detectado por 942100, 942190, 942270) |
+| 2026-11-17 | 07:50:31 | Sebas | curl, WAF en DetectionOnly | `GET /rest/basket/1` | token de jim, id ajeno | 200 (el WAF no lo ve) |
+| 2026-11-17 | 08:02:21 | Sebas | curl, WAF en On | `POST /rest/user/login` | `' OR 1=1--` | **403**, bloqueado |
+| 2026-11-17 | 08:02:23 | Sebas | curl, WAF en On | `GET /rest/products/search?q=` | `qwert')) UNION SELECT … FROM Users--` | **403**, bloqueado |
+| 2026-11-17 | 08:02:25 | Sebas | curl, WAF en On | `GET /rest/basket/1` | token de jim, id ajeno | 200, sigue pasando (se corrige en el código, H4) |

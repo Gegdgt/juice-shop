@@ -1,0 +1,11 @@
+=== PoC del Equipo rojo por el WAF (http://127.0.0.1:8080) | modo: On ===
+Fecha: 2026-11-17  (hora local GT y UTC en cada fila)
+
+08:02:21 | 14:02:21 UTC | PoC-01  | HTTP 403 | POST /rest/user/login | payload: email=' OR 1=1--
+08:02:23 | 14:02:23 UTC | PoC-02  | HTTP 403 | GET /rest/products/search | payload: q=qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM Users--
+08:02:25 | 14:02:25 UTC | PoC-03  | HTTP 200 | GET /rest/basket/1 | payload: token de jim, basket ajeno
+08:02:27 | 14:02:27 UTC | DET-02  | HTTP 403 | GET /rest/products/search | payload: q=<script>alert(1)</script>
+08:02:29 | 14:02:29 UTC | DET-03  | HTTP 403 | PROPFIND /rest/products/search | payload: método fuera de ALLOWED_METHODS
+
+Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 500 (la app no conoce PROPFIND).
+Esperado en On:            PoC-01 403, PoC-02 403, PoC-03 200 (lo corrige el H4), DET-02 403, DET-03 403.

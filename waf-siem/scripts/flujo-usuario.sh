@@ -26,6 +26,12 @@ pedir() {
 # extraer CAMPO -> primer valor de "CAMPO": en el último cuerpo
 extraer() { grep -oE "\"$1\":\"?[^\",}]*" "$TMP/body" | head -1 | sed -E "s/\"$1\":\"?//"; }
 
+# Espera a que el WAF responda (tras "docker compose up -d waf" tarda unos segundos)
+for _ in $(seq 1 30); do
+  c="$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 "$WAF_URL/rest/admin/application-version" || true)"
+  [ "$c" = "200" ] && break; sleep 1
+done
+
 INICIO_UTC="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 STAMP="$(date '+%Y%m%d%H%M%S')"
 EMAIL="cliente.$STAMP@juice-sh.op"

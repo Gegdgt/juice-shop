@@ -47,7 +47,7 @@ Los mismos ataques se lanzaron dos veces con `waf-siem/scripts/poc-redteam.sh`: 
 
 El IDOR pasa en los dos modos y es lo correcto desde el punto de vista del WAF: la petición es válida, solo cambia un id. Se corrige en el código en el Hito 4.
 
-Salidas completas: [`poc-DetectionOnly.txt`](poc-DetectionOnly.txt), [`poc-On.txt`](poc-On.txt). Captura del bloqueo: [`06-waf-403-bloqueo.png`](06-waf-403-bloqueo.png).
+Salidas completas: [`poc-DetectionOnly.txt`](poc-DetectionOnly.txt), [`poc-On.txt`](poc-On.txt). Captura del bloqueo: [`06-waf-403-bloqueos.png`](06-waf-403-bloqueos.png).
 
 ## Exclusiones
 
@@ -58,7 +58,7 @@ Con el WAF en `On` se usó la app como cliente normal con `waf-siem/scripts/fluj
 | 911100 (método no permitido) | `PUT /api/BasketItems/:id`, `DELETE /api/BasketItems/:id`, `PUT /rest/products/:id/reviews`, `PATCH /rest/products/reviews` | Nada en el CRS: se agregaron `PUT PATCH DELETE` a `ALLOWED_METHODS` (tipo 4). | Son los métodos REST que usa la propia SPA para cambiar la cantidad, quitar productos, escribir y editar reseñas. Riesgo aceptado: esos tres métodos se aceptan en todas las rutas; la autorización de cada ruta la sigue haciendo la app. Métodos raros como `PROPFIND`, `TRACE` o `CONNECT` siguen bloqueados (DET-03). | `waf-siem/.env` (y `.env.example`) |
 | 932260 (RCE: comando Unix directo) | `REQUEST_FILENAME` en `/rest/user/whoami` | Solo el target `REQUEST_FILENAME` de la 932260, solo en esa ruta exacta (`@streq`), regla `id:10002`. | La regla confunde el nombre del endpoint con el comando `whoami`. La SPA lo llama en cada carga para saber quién está logueado. Riesgo aceptado: en esa ruta la 932260 no revisa el nombre del archivo; parámetros, cookies y cabeceras siguen evaluados. | `waf-siem/waf/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf` |
 
-Efecto secundario que no es falso positivo: el feedback y la queja dieron 400 en la primera vuelta porque, sin la respuesta de `whoami`, el script mandó un JSON con `UserId` vacío y el WAF lo rechazó con la regla 200002 (cuerpo que no se puede parsear). Ese rechazo es correcto. Al arreglar `whoami` el JSON va completo y pasan.
+Lo que no fue falso positivo: el feedback y la queja dieron 400 en las dos vueltas. La causa estaba en el script, no en el WAF. `/rest/user/whoami` lee la sesión de la cookie `token` (como la manda el navegador) y no de la cabecera `Authorization`; el script solo mandaba la cabecera, así que `whoami` devolvía un usuario vacío y el JSON salía con `UserId` vacío. El WAF rechazó ese cuerpo con la regla 200002 (JSON que no se puede parsear), que es el comportamiento correcto. Se corrigió el script para mandar también la cookie, igual que la SPA.
 
 Después del ajuste, la misma vuelta no tiene ningún 403 en acciones legítimas ([`flujo-usuario-despues.txt`](flujo-usuario-despues.txt)) y los ataques siguen bloqueados ([`poc-On.txt`](poc-On.txt)). Captura: [`07-exclusion-falso-positivo.png`](07-exclusion-falso-positivo.png).
 

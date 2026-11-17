@@ -15,7 +15,9 @@ TOKEN=""
 pedir() {
   local nombre="$1" metodo="$2" ruta="$3" data="${4:-}"
   local args=(-s -o "$TMP/body" -w '%{http_code}' --max-time 20 -X "$metodo")
-  [ -n "$TOKEN" ] && args+=(-H "Authorization: Bearer $TOKEN")
+  # Igual que la SPA: el token va en la cabecera y en la cookie "token"
+  # (/rest/user/whoami solo lee la cookie).
+  [ -n "$TOKEN" ] && args+=(-H "Authorization: Bearer $TOKEN" -H "Cookie: token=$TOKEN")
   [ -n "$data" ] && args+=(-H 'Content-Type: application/json' --data "$data")
   CODE="$(curl "${args[@]}" "$WAF_URL$ruta" || echo 000)"
   marca=""
@@ -88,7 +90,7 @@ pedir "Enviar feedback"  POST "/api/Feedbacks" \
 
 # 7. Queja con archivo adjunto
 printf '%%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%%%EOF\n' > "$TMP/factura.pdf"
-CODE="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -H "Authorization: Bearer $TOKEN" \
+CODE="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -H "Authorization: Bearer $TOKEN" -H "Cookie: token=$TOKEN" \
   -F "file=@$TMP/factura.pdf;type=application/pdf" "$WAF_URL/file-upload" || echo 000)"
 marca=""; [ "$CODE" = "403" ] && { marca="  <-- 403: posible falso positivo"; BLOQUEOS+=("$(date '+%H:%M:%S') POST /file-upload (Subir PDF)"); }
 printf '%s | HTTP %s | %-6s %-45s | %s%s\n' "$(date '+%H:%M:%S')" "$CODE" POST "/file-upload" "Subir PDF de la queja" "$marca"; sleep 1

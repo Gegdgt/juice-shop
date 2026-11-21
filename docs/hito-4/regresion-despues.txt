@@ -1,0 +1,31 @@
+### Código: con las tres correcciones (último commit fix(h4), PoC-03)
+### 2026-11-20T23:51:59Z · node v22.23.5 · base de datos en memoria
+### node --import ./test/api/helpers/test-env.mjs --import tsx --test --test-force-exit --test-reporter=spec test/api/h4-regression.test.ts
+▶ H4 Corrección 1 · PoC-01 SQLi en el login (CWE-89)
+  ✔ PoC-01: email "' OR 1=1--" no inicia sesión (47.259507ms)
+  ✔ email conocido con comentario SQL no se salta la contraseña (16.077198ms)
+  ✔ UNION SELECT en el email no fabrica un usuario (30.76696ms)
+  ✔ email que no es texto se rechaza con 401, sin error 500 (21.304522ms)
+  ✔ login legítimo sigue funcionando (40.854882ms)
+  ✔ cuenta con 2FA sigue pidiendo el segundo factor (11.278171ms)
+✔ H4 Corrección 1 · PoC-01 SQLi en el login (CWE-89) (840.828138ms)
+▶ H4 Corrección 2 · PoC-02 UNION SQLi en la búsqueda (CWE-89)
+  ✔ PoC-02: el UNION no devuelve correos ni hashes (20.057315ms)
+  ✔ comillas y paréntesis no rompen la consulta (sin error SQL 500) (23.931888ms)
+  ✔ comentar el WHERE no expone productos borrados (30.415904ms)
+  ✔ q repetido (arreglo) se trata como texto, sin error (27.445059ms)
+  ✔ búsqueda legítima sigue encontrando productos (22.863895ms)
+✔ H4 Corrección 2 · PoC-02 UNION SQLi en la búsqueda (CWE-89) (125.322534ms)
+▶ H4 Corrección 3 · PoC-03 IDOR en el carrito (CWE-639)
+  ✔ PoC-03: jim no puede leer el carrito 1 (de admin) (64.388763ms)
+  ✔ jim sí puede leer su propio carrito (38.692836ms)
+  ✔ un id que no existe no se distingue de uno ajeno (41.060158ms)
+✔ H4 Corrección 3 · PoC-03 IDOR en el carrito (CWE-639) (144.456249ms)
+ℹ tests 14
+ℹ suites 3
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2357.682283

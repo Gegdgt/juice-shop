@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Repite los PoC del Equipo rojo (H2) por el WAF y anota hora, payload y código HTTP.
 # Sirve en los dos modos:
-#   DetectionOnly -> los ataques pasan (200/401) pero quedan en Kibana (DET-01..03)
+#   DetectionOnly -> los ataques pasan (200/401) pero quedan en Kibana (DET-01..05)
 #   On            -> los ataques de inyección y el método raro reciben 403
 # Uso, desde waf-siem/:
 #   ./scripts/poc-redteam.sh | tee ../docs/hito-3/poc-$(grep ^MODSEC_RULE_ENGINE .env | cut -d= -f2).txt
@@ -56,8 +56,35 @@ C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 -G "$WAF_URL/rest/prod
 fila DET-02 GET /rest/products/search "q=$P4" "$C"; sleep 2
 
 C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 -X PROPFIND "$WAF_URL/rest/products/search")"
-fila DET-03 PROPFIND /rest/products/search "método fuera de ALLOWED_METHODS" "$C"
+fila DET-03 PROPFIND /rest/products/search "método fuera de ALLOWED_METHODS" "$C"; sleep 2
+
+# DET-04 · Path traversal / archivo restringido (CRS 930*). Ataque real sobre /ftp (V-10):
+# el byte nulo codificado (%2500) engaña el filtro de extensiones de la app y descarga
+# el respaldo package.json.bak. En DetectionOnly la app entrega el archivo (200).
+P5="/ftp/package.json.bak%2500.md"
+C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$WAF_URL$P5")"
+fila DET-04 GET "$P5" "byte nulo: descarga package.json.bak" "$C"; sleep 2
+
+# Misma técnica con otro respaldo. El CRS en paranoia 1 no tiene "coupons_2013" en su
+# lista de archivos restringidos: sirve para ver qué se le escapa a DET-04.
+P5B="/ftp/coupons_2013.md.bak%2500.md"
+C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$WAF_URL$P5B")"
+fila DET-04b GET "$P5B" "byte nulo: descarga coupons_2013.md.bak" "$C"; sleep 2
+
+# DET-05 · Inyección de comandos (CRS 932*) en el parámetro de búsqueda.
+P6="jugo; uname -a"
+C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 -G "$WAF_URL/rest/products/search" \
+  --data-urlencode "q=$P6")"
+fila DET-05 GET /rest/products/search "q=$P6" "$C"; sleep 2
+
+P7='$(id)'
+C="$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 -G "$WAF_URL/rest/products/search" \
+  --data-urlencode "q=$P7")"
+fila DET-05 GET /rest/products/search "q=$P7" "$C"
 
 echo
-echo "Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 500 (la app no conoce PROPFIND)."
-echo "Esperado en On:            PoC-01 403, PoC-02 403, PoC-03 200 (lo corrige el H4), DET-02 403, DET-03 403."
+echo "Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 500 (la app no conoce PROPFIND),"
+echo "                           DET-04 200 (se descarga el respaldo), DET-04b 200, DET-05 200 y 200 (la app solo busca texto)."
+echo "Esperado en On:            PoC-01 403, PoC-02 403, PoC-03 200 (lo corrige el H4), DET-02 403, DET-03 403,"
+echo "                           DET-04 403, DET-04b 200 (el CRS no lo marca en paranoia 1), DET-05 403 y 403."
+echo "Con la app del H4 (build: ..) y DetectionOnly: PoC-01 401, PoC-02 200 sin datos, PoC-03 403: falla por el código."

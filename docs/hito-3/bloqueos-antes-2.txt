@@ -1,0 +1,92 @@
+Fri Nov 20 21:27:21 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hphkbqmm&sid=0unQtxFb77N-4WoqAAAR
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:23 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpijloa2&sid=dQwAc-zH5RdspNDpAAAS
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:23 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpijyq0h&sid=dQwAc-zH5RdspNDpAAAS
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:24 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpjgrhhh&sid=D3Zdtwb6SNMAewcMAAAT
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:24 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpjh1wu1&sid=D3Zdtwb6SNMAewcMAAAT
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:25 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpk8ra34&sid=p7YCnrTlNs7PWNJiAAAU
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:25 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpk92k65&sid=p7YCnrTlNs7PWNJiAAAU
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:26 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpkyee20&sid=7_IVelVsiWWKT7sgAAAV
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:26 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hpkyrpjk&sid=7_IVelVsiWWKT7sgAAAV
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:27 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hplqiv0o&sid=-cJL41JHufIhrOV8AAAW
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:46 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hplqpn5x&sid=-cJL41JHufIhrOV8AAAW
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:46 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq0otbnw&sid=WJMyYD_N1KXArhNpAAAX
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:48 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq0oz930&sid=WJMyYD_N1KXArhNpAAAX
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:48 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq1ul3zc&sid=U9saQj_QWErm03yYAAAY
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:49 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq1uwutw&sid=U9saQj_QWErm03yYAAAY
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:49 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq2rodhv&sid=tZs4EMPGZw9bCil0AAAZ
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:50 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq2s0zm9&sid=tZs4EMPGZw9bCil0AAAZ
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:50 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq3v1ym9&sid=5vJoOxzM6mby7wxVAAAa
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:51 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq3v9h17&sid=5vJoOxzM6mby7wxVAAAa
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:52 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq52x5v5&sid=Emt3hPVmsOz0z44YAAAb
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:52 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq53cfss&sid=Emt3hPVmsOz0z44YAAAb
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:27:53 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq68evpc&sid=mQQlf2vpwwHDcAeAAAAc
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Fri Nov 20 21:28:11 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=hq68nnl8&sid=mQQlf2vpwwHDcAeAAAAc
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Sat Nov 21 01:37:51 2026 | HTTP 403 | POST /rest/user/login
+    - 942100 SQL Injection Attack Detected via libinjection | data: Matched Data: s&1c found within ARGS:json.email: ' OR 1=1--
+Sat Nov 21 01:55:53 2026 | HTTP 200 | POST /rest/user/login
+    - 942100 SQL Injection Attack Detected via libinjection | data: Matched Data: s&1c found within ARGS:json.email: ' OR 1=1--
+Sat Nov 21 01:55:55 2026 | HTTP 200 | GET /rest/products/search?q=qwert%27%29%29+UNION+SELECT+id%2c+email%2c+password%2c+%274%27%2c%
+    - 942100 SQL Injection Attack Detected via libinjection | data: Matched Data: s)UEn found within ARGS:q: qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM Us
+    - 942190 Detects SQL code execution and information gathering attempt | data: Matched Data: UNION SELECT found within ARGS:q: qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' 
+    - 942270 Looking for basic sql injection. Common attack string for my | data: Matched Data: UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM found within ARGS:q: qwert')) UNION SE
+Sat Nov 21 01:55:59 2026 | HTTP 200 | GET /rest/products/search?q=%3cscript%3ealert%281%29%3c%2fscript%3e
+    - 941100 XSS Attack Detected via libinjection | data: Matched Data: XSS data found within ARGS:q: <script>alert(1)</script>
+    - 941110 XSS Filter - Category 1: Script Tag Vector | data: Matched Data: <script> found within ARGS:q: <script>alert(1)</script>
+    - 941160 NoScript XSS InjectionChecker: HTML Injection | data: Matched Data: <script found within ARGS:q: <script>alert(1)</script>
+    - 941390 Javascript method detected | data: Matched Data: alert( found within ARGS:q: <script>alert(1)</script>
+Sat Nov 21 01:56:01 2026 | HTTP 500 | PROPFIND /rest/products/search
+    - 911100 Method is not allowed by policy | data: PROPFIND
+Sat Nov 21 01:56:03 2026 | HTTP 200 | GET /ftp/package.json.bak%2500.md
+    - 930130 Restricted File Access Attempt | data: Matched Data: /package.json found within REQUEST_FILENAME: /ftp/package.json.bak\x00.md
+Sat Nov 21 01:56:08 2026 | HTTP 200 | GET /rest/products/search?q=jugo%3b+uname+-a
+    - 932235 Remote Command Execution: Unix Command Injection (command wi | data: Matched Data: ; uname  found within ARGS:q: jugo; uname -a
+    - 932260 Remote Command Execution: Direct Unix Command Execution | data: Matched Data: ; uname  found within ARGS:q: jugo; uname -a
+Sat Nov 21 01:56:10 2026 | HTTP 200 | GET /rest/products/search?q=%24%28id%29
+    - 932130 Remote Command Execution: Unix Shell Expression Found | data: Matched Data: $(id) found within ARGS:q: $(id)
+Sat Nov 21 01:56:12 2026 | HTTP 403 | POST /rest/user/login
+    - 942100 SQL Injection Attack Detected via libinjection | data: Matched Data: s&1c found within ARGS:json.email: ' OR 1=1--
+Sat Nov 21 01:56:14 2026 | HTTP 403 | GET /rest/products/search?q=qwert%27%29%29+UNION+SELECT+id%2c+email%2c+password%2c+%274%27%2c%
+    - 942100 SQL Injection Attack Detected via libinjection | data: Matched Data: s)UEn found within ARGS:q: qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM Us
+    - 942190 Detects SQL code execution and information gathering attempt | data: Matched Data: UNION SELECT found within ARGS:q: qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' 
+    - 942270 Looking for basic sql injection. Common attack string for my | data: Matched Data: UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM found within ARGS:q: qwert')) UNION SE
+Sat Nov 21 01:56:18 2026 | HTTP 403 | GET /rest/products/search?q=%3cscript%3ealert%281%29%3c%2fscript%3e
+    - 941100 XSS Attack Detected via libinjection | data: Matched Data: XSS data found within ARGS:q: <script>alert(1)</script>
+    - 941110 XSS Filter - Category 1: Script Tag Vector | data: Matched Data: <script> found within ARGS:q: <script>alert(1)</script>
+    - 941160 NoScript XSS InjectionChecker: HTML Injection | data: Matched Data: <script found within ARGS:q: <script>alert(1)</script>
+    - 941390 Javascript method detected | data: Matched Data: alert( found within ARGS:q: <script>alert(1)</script>
+Sat Nov 21 01:56:20 2026 | HTTP 403 | PROPFIND /rest/products/search
+    - 911100 Method is not allowed by policy | data: PROPFIND
+Sat Nov 21 01:56:22 2026 | HTTP 403 | GET /ftp/package.json.bak%2500.md
+    - 930130 Restricted File Access Attempt | data: Matched Data: /package.json found within REQUEST_FILENAME: /ftp/package.json.bak\x00.md
+Sat Nov 21 01:56:26 2026 | HTTP 403 | GET /rest/products/search?q=jugo%3b+uname+-a
+    - 932235 Remote Command Execution: Unix Command Injection (command wi | data: Matched Data: ; uname  found within ARGS:q: jugo; uname -a
+    - 932260 Remote Command Execution: Direct Unix Command Execution | data: Matched Data: ; uname  found within ARGS:q: jugo; uname -a
+Sat Nov 21 01:56:28 2026 | HTTP 403 | GET /rest/products/search?q=%24%28id%29
+    - 932130 Remote Command Execution: Unix Shell Expression Found | data: Matched Data: $(id) found within ARGS:q: $(id)
+Sat Nov 21 01:56:37 2026 | HTTP 403 | POST /socket.io/?EIO=4&transport=polling&t=h3c1795226196&sid=C2jv-IUd6ogrt2AiAAAe
+    - 920420 Request content type is not allowed by policy | data: |text/plain|
+Sat Nov 21 01:56:52 2026 | HTTP 403 | PUT /rest/products/2/reviews
+    - 932235 Remote Command Execution: Unix Command Injection (command wi | data: Matched Data: ; echo  found within ARGS:json.message: Muy rico; echo de menos la presentaci\xc3\xb3n en vidrio 202611201

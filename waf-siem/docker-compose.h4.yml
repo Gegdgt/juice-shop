@@ -1,0 +1,17 @@
+# Hito 4 · La app se construye desde el código de este fork (con las correcciones)
+# en lugar de usar la imagen pública bkimminich/juice-shop.
+#
+# Uso, desde waf-siem/ (la primera construcción tarda: instala dependencias y compila el frontend):
+#   export COMPOSE_FILE=docker-compose.yml:docker-compose.h4.yml
+#   docker compose up -d --build app
+#   ./scripts/modo-waf.sh DetectionOnly
+#   ./scripts/reprueba-h4.sh | tee ../docs/hito-4/reprueba-DetectionOnly.txt
+#
+# Para volver a la imagen pública (evidencia del H2 y H3):
+#   unset COMPOSE_FILE && docker compose up -d app
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: juice-shop-uvg:h4

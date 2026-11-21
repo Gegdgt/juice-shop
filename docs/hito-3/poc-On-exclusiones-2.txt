@@ -1,0 +1,18 @@
+=== PoC del Equipo rojo por el WAF (http://127.0.0.1:8080) | modo: On ===
+Fecha: 2026-11-20  (hora local GT y UTC en cada fila)
+
+19:57:39 | 01:57:39 UTC | PoC-01  | HTTP 403 | POST /rest/user/login | payload: email=' OR 1=1--
+19:57:41 | 01:57:41 UTC | PoC-02  | HTTP 403 | GET /rest/products/search | payload: q=qwert')) UNION SELECT id, email, password, '4','5','6','7','8','9','10' FROM Users--
+19:57:43 | 01:57:43 UTC | PoC-03  | HTTP 200 | GET /rest/basket/1 | payload: token de jim, basket ajeno
+19:57:45 | 01:57:45 UTC | DET-02  | HTTP 403 | GET /rest/products/search | payload: q=<script>alert(1)</script>
+19:57:47 | 01:57:47 UTC | DET-03  | HTTP 403 | PROPFIND /rest/products/search | payload: método fuera de ALLOWED_METHODS
+19:57:50 | 01:57:50 UTC | DET-04  | HTTP 403 | GET /ftp/package.json.bak%2500.md | payload: byte nulo: descarga package.json.bak
+19:57:52 | 01:57:52 UTC | DET-04b | HTTP 200 | GET /ftp/coupons_2013.md.bak%2500.md | payload: byte nulo: descarga coupons_2013.md.bak
+19:57:54 | 01:57:54 UTC | DET-05  | HTTP 403 | GET /rest/products/search | payload: q=jugo; uname -a
+19:57:56 | 01:57:56 UTC | DET-05  | HTTP 403 | GET /rest/products/search | payload: q=$(id)
+
+Esperado en DetectionOnly: PoC-01 200, PoC-02 200, PoC-03 200, DET-02 200, DET-03 500 (la app no conoce PROPFIND),
+                           DET-04 200 (se descarga el respaldo), DET-04b 200, DET-05 200 y 200 (la app solo busca texto).
+Esperado en On:            PoC-01 403, PoC-02 403, PoC-03 200 (lo corrige el H4), DET-02 403, DET-03 403,
+                           DET-04 403, DET-04b 200 (el CRS no lo marca en paranoia 1), DET-05 403 y 403.
+Con la app del H4 (build: ..) y DetectionOnly: PoC-01 401, PoC-02 200 sin datos, PoC-03 403: falla por el código.

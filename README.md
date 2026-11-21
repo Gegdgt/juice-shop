@@ -4,6 +4,12 @@ Este fork, [Gegdgt/juice-shop](https://github.com/Gegdgt/juice-shop), reúne el 
 de H1–H4 y conserva el código y la documentación oficial de OWASP Juice Shop.
 
 - [Entregables H1: PASTA I–V, DFD, STRIDE y casos de abuso](docs/hito-1/README.md).
+- [Diagramas por objetivo de negocio (ON-01 a ON-05)](docs/hito-1/02b-Diagramas-por-objetivo.md).
+- [Hito 2: pipeline DevSecOps y PoC del Equipo rojo](docs/hito-2/README.md).
+- [Hito 3: WAF, SIEM, reglas DET-01 a DET-05 y exclusiones](docs/hito-3/README.md).
+- [Hito 4: correcciones en el código, pruebas de regresión y uso de IA](docs/hito-4/README.md).
+- [Matriz de trazabilidad y riesgo residual (PASTA VI y VII)](docs/trazabilidad-y-riesgo-residual.md).
+- Guiones del video: [H1 a H3 con demo en vivo](docs/guion-video.md) · [H4](docs/hito-4/guion-video.md).
 - [Guía del proyecto, instalación, responsables y diagnóstico](docs/hito-1/GUIA-PROYECTO.md).
 - [Checklist y requisitos pendientes](docs/hito-1/07-CHECKLIST.md).
 - [Migración, workflows y publicación](docs/hito-1/08-Migracion-fork.md).

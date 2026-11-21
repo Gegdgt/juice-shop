@@ -16,7 +16,18 @@ export function retrieveBasket () {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id
-      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+      // H4 Corrección 3 (PoC-03, CWE-639): el carrito se busca por id Y por el dueño de
+      // la sesión. Un id ajeno o inexistente responde 403, sin datos y sin distinguirlos.
+      const sessionUser = security.authenticatedUsers.from(req)
+      if (!sessionUser?.data?.id) {
+        res.status(401).json({ status: 'error', message: 'Unauthorized' })
+        return
+      }
+      const basket = await BasketModel.findOne({ where: { id, UserId: sessionUser.data.id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+      if (basket == null) {
+        res.status(403).json({ status: 'error', message: 'Forbidden' })
+        return
+      }
       /* jshint eqeqeq:false */
       challengeUtils.solveIf(challenges.basketAccessChallenge, () => {
         const user = security.authenticatedUsers.from(req)

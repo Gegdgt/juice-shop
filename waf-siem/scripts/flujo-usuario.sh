@@ -25,6 +25,16 @@ pedir() {
   printf '%s | HTTP %s | %-6s %-45s | %s%s\n' "$(date '+%H:%M:%S')" "$CODE" "$metodo" "$ruta" "$nombre" "$marca"
   sleep 1
 }
+# pedir_texto NOMBRE RUTA CUERPO -> POST con Content-Type text/plain, como el cliente socket.io del navegador
+pedir_texto() {
+  local nombre="$1" ruta="$2" data="$3"
+  CODE="$(curl -s -o "$TMP/body" -w '%{http_code}' --max-time 20 -X POST \
+    -H 'Content-Type: text/plain;charset=UTF-8' --data "$data" "$WAF_URL$ruta" || echo 000)"
+  marca=""
+  if [ "$CODE" = "403" ]; then marca="  <-- 403: posible falso positivo"; BLOQUEOS+=("$(date '+%H:%M:%S') POST $ruta ($nombre)"); fi
+  printf '%s | HTTP %s | %-6s %-45s | %s%s\n' "$(date '+%H:%M:%S')" "$CODE" POST "${ruta%%\?*}?..." "$nombre" "$marca"
+  sleep 1
+}
 # extraer CAMPO -> primer valor de "CAMPO": en el último cuerpo
 extraer() { grep -oE "\"$1\":\"?[^\",}]*" "$TMP/body" | head -1 | sed -E "s/\"$1\":\"?//"; }
 
@@ -48,6 +58,13 @@ pedir "Versión de la app"       GET  "/rest/admin/application-version"
 pedir "Catálogo"                GET  "/api/Products"
 pedir "Búsqueda normal"         GET  "/rest/products/search?q=jugo%20de%20manzana"
 pedir "Preguntas de seguridad"  GET  "/api/SecurityQuestions/"
+
+# 1b. Notificaciones en tiempo real: la SPA abre socket.io al cargar. Primero el
+# handshake por polling (GET) y luego el primer mensaje del cliente por POST text/plain.
+T0="$(date '+%s')"
+pedir "socket.io: handshake"     GET  "/socket.io/?EIO=4&transport=polling&t=h3b$T0"
+SID="$(grep -oE '"sid":"[^"]*"' "$TMP/body" | head -1 | cut -d'"' -f4)"
+pedir_texto "socket.io: conectar (text/plain)" "/socket.io/?EIO=4&transport=polling&t=h3c$T0&sid=$SID" "40"
 
 # 2. Registro y login
 pedir "Registro"  POST "/api/Users" \
@@ -81,6 +98,8 @@ pedir "Escribir reseña"  PUT "/rest/products/1/reviews" "{\"message\":\"$MSG\",
 pedir "Leer reseñas"     GET "/rest/products/1/reviews"
 RID="$(tr '}' '\n' < "$TMP/body" | grep "$STAMP" | grep -oE '"_id":"[^"]*"' | head -1 | cut -d'"' -f4)"
 pedir "Editar reseña"    PATCH "/rest/products/reviews" "{\"id\":\"$RID\",\"message\":\"$MSG (editada: sigue igual de bueno)\"}"
+# Reseña en español con una frase común que el CRS confunde con un comando ("echo")
+pedir "Reseña: echo de menos" PUT "/rest/products/2/reviews" "{\"message\":\"Muy rico; echo de menos la presentación en vidrio $STAMP\",\"author\":\"$EMAIL\"}"
 
 # 6. Feedback con captcha
 pedir "Captcha"          GET  "/rest/captcha/"

@@ -1,0 +1,25 @@
+SAST local · Semgrep 1.186.0 · reglas comunitarias semgrep-rules (javascript/ y typescript/), commit a5ad171 del 2026-11-10
+Fecha: 2026-11-20T23:54:04Z. No reemplaza la corrida del pipeline (p/default + p/owasp-top-ten).
+
+== Antes (commit 7fa2daa, código original)
+$ semgrep --config javascript --config typescript routes/login.ts routes/search.ts routes/basket.ts
+   WARNING sequelize-raw-query routes/login.ts:34
+   ERROR express-sequelize-injection routes/login.ts:34
+   ERROR tainted-sql-string routes/login.ts:34
+   WARNING sequelize-raw-query routes/search.ts:23
+   ERROR express-sequelize-injection routes/search.ts:23
+   ERROR tainted-sql-string routes/search.ts:23
+  hallazgos: 6 | reglas cargadas sin error: sí
+
+== Después (después de los tres commits fix(h4))
+$ semgrep --config javascript --config typescript routes/login.ts routes/search.ts routes/basket.ts test/api/h4-regression.test.ts
+  hallazgos: 0 | reglas cargadas sin error: sí
+
+== Secretos en los archivos nuevos o cambiados (reglas generic/secrets)
+  hallazgos: 1 · generic-api-key en routes/login.ts:69
+  Ya existía en el original (routes/login.ts:64): es la contraseña de un reto de Juice Shop
+  (oauthUserPasswordChallenge), no algo que introdujo la corrección. Ningún secreto nuevo.
+
+== Dependencias nuevas
+$ git diff 7fa2daa entrega-final -- package.json frontend/package.json
+  líneas cambiadas: 0 (ninguna dependencia nueva)

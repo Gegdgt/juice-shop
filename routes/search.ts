@@ -18,9 +18,13 @@ class ErrorWithParent extends Error {
 // vuln-code-snippet start unionSqlInjectionChallenge dbSchemaChallenge
 export function searchProducts () {
   return (req: Request, res: Response, next: NextFunction) => {
-    let criteria: any = req.query.q === 'undefined' ? '' : req.query.q ?? ''
-    criteria = (criteria.length <= 200) ? criteria : criteria.substring(0, 200)
-    models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge
+    // H4 Corrección 2 (PoC-02, CWE-89): q siempre es texto y va como replacement de
+    // Sequelize. Las comillas y paréntesis del usuario ya no pueden cerrar la consulta.
+    const raw = Array.isArray(req.query.q) ? req.query.q[0] : req.query.q
+    let criteria: string = typeof raw === 'string' && raw !== 'undefined' ? raw : ''
+    criteria = criteria.substring(0, 200)
+    models.sequelize.query('SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name', // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge
+      { replacements: { criteria: `%${criteria}%` } })
       .then(([products]: any) => {
         const dataString = JSON.stringify(products)
         if (challengeUtils.notSolved(challenges.unionSqlInjectionChallenge)) { // vuln-code-snippet hide-start

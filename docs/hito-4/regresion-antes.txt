@@ -1,0 +1,159 @@
+### Código: con la prueba nueva (commit test(h4)) y SIN las correcciones
+### 2026-11-20T23:51:51Z · node v22.23.5 · base de datos en memoria
+### node --import ./test/api/helpers/test-env.mjs --import tsx --test --test-force-exit --test-reporter=spec test/api/h4-regression.test.ts
+▶ H4 Corrección 1 · PoC-01 SQLi en el login (CWE-89)
+  ✖ PoC-01: email "' OR 1=1--" no inicia sesión (81.524831ms)
+  ✖ email conocido con comentario SQL no se salta la contraseña (30.742503ms)
+  ✖ UNION SELECT en el email no fabrica un usuario (29.083847ms)
+  ✖ email que no es texto se rechaza con 401, sin error 500 (14.161021ms)
+  ✔ login legítimo sigue funcionando (24.232418ms)
+  ✔ cuenta con 2FA sigue pidiendo el segundo factor (15.337067ms)
+✖ H4 Corrección 1 · PoC-01 SQLi en el login (CWE-89) (936.217188ms)
+▶ H4 Corrección 2 · PoC-02 UNION SQLi en la búsqueda (CWE-89)
+  ✖ PoC-02: el UNION no devuelve correos ni hashes (20.74802ms)
+  ✖ comillas y paréntesis no rompen la consulta (sin error SQL 500) (20.816284ms)
+  ✖ comentar el WHERE no expone productos borrados (24.339642ms)
+  ✔ q repetido (arreglo) se trata como texto, sin error (17.804063ms)
+  ✔ búsqueda legítima sigue encontrando productos (18.918781ms)
+✖ H4 Corrección 2 · PoC-02 UNION SQLi en la búsqueda (CWE-89) (103.188185ms)
+▶ H4 Corrección 3 · PoC-03 IDOR en el carrito (CWE-639)
+  ✖ PoC-03: jim no puede leer el carrito 1 (de admin) (60.828637ms)
+  ✔ jim sí puede leer su propio carrito (46.185756ms)
+  ✖ un id que no existe no se distingue de uno ajeno (39.952401ms)
+✖ H4 Corrección 3 · PoC-03 IDOR en el carrito (CWE-639) (147.367199ms)
+ℹ tests 14
+ℹ suites 3
+ℹ pass 5
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2908.826712
+
+✖ failing tests:
+
+test at test/api/h4-regression.test.ts:2:1298
+✖ PoC-01: email "' OR 1=1--" no inicia sesión (81.524831ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:1616
+✖ email conocido con comentario SQL no se salta la contraseña (30.742503ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:1899
+✖ UNION SELECT en el email no fabrica un usuario (29.083847ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:2175
+✖ email que no es texto se rechaza con 401, sin error 500 (14.161021ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 401
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:3353
+✖ PoC-02: el UNION no devuelve correos ni hashes (20.74802ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  25 !== 0
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 25,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:3715
+✖ comillas y paréntesis no rompen la consulta (sin error SQL 500) (20.816284ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  56 !== 0
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 56,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:4017
+✖ comentar el WHERE no expone productos borrados (24.339642ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:5108
+✖ PoC-03: jim no puede leer el carrito 1 (de admin) (60.828637ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 403
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/api/h4-regression.test.ts:2:5875
+✖ un id que no existe no se distingue de uno ajeno (39.952401ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 403
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

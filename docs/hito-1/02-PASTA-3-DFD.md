@@ -24,7 +24,7 @@ servicio en ejecución ni introduce SIEM antes de H3.
 
 ![DFD H1](DFD-referencia.png)
 
-[SVG ampliable](DFD-referencia.svg) · [fuente DOT](DFD-referencia.dot). Es un diagrama técnico generado, **no una captura de ejecución**. Los originales del kit están en [archivo de procedencia](fuentes/kit-original.zip).
+[SVG ampliable](DFD-referencia.svg) · [fuente DOT](DFD-referencia.dot) · [el mismo DFD cortado por objetivo de negocio](02b-Diagramas-por-objetivo.md). Es un diagrama técnico generado, **no una captura de ejecución**. Los originales del kit están en [archivo de procedencia](fuentes/kit-original.zip).
 
 ```mermaid
 flowchart LR

@@ -6,6 +6,7 @@
 |---|---|---|
 | PASTA I–II | Objetivos, activos, CIA y alcance preparados | [01](01-PASTA-1-2.md) |
 | PASTA III | DFD actualizado con SQLite, MarsDB, logs y 4 límites | [02](02-PASTA-3-DFD.md) |
+| Diagramas por objetivo | Un diagrama por objetivo de negocio (ON-01 a ON-05): flujos, amenazas, PoC y controles de H2–H4 | [02b](02b-Diagramas-por-objetivo.md) |
 | PASTA IV | 16 amenazas, seis categorías STRIDE | [03](03-PASTA-4-STRIDE.md) |
 | PASTA V | 10 debilidades identificadas en código, ligadas a amenazas y al DFD | [03b](03b-PASTA-5-Vulnerabilidades.md) |
 | Requisitos/casos | 13 requisitos medibles con su control (pipeline, Kibana o WAF) y 12 casos completos de diseño | [04](04-Requisitos-y-casos-de-abuso.md) |

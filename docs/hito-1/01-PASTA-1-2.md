@@ -14,6 +14,8 @@
 | ON-04 | Mantener disponibilidad razonable | Aplicación y API | Medio/alto: servicios inutilizables | Control de tasa, monitoreo |
 | ON-05 | Poder reconstruir eventos sospechosos | Logs de WAF y app | Alto: pérdida de trazabilidad | Registro, integridad y protección de logs |
 
+Cada objetivo tiene su propio diagrama, con los flujos, amenazas y controles que le tocan: [diagramas por objetivo](02b-Diagramas-por-objetivo.md).
+
 **Datos y clasificación:** credenciales y tokens (secretos); datos de cuenta y pedidos (sensibles del laboratorio); catálogo (público); logs (internos, potencialmente sensibles). Usar únicamente cuentas ficticias y datos de prueba.
 
 **Requisitos generales de seguridad:** mínimos privilegios, autorización de servidor, validación de entradas, trazabilidad, privacidad de tokens y resiliencia básica. Requisitos medibles en `04-Requisitos-y-casos-de-abuso.md`.

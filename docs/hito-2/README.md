@@ -33,6 +33,8 @@ Propuesta del Equipo azul, pendiente de acordar entre los dos.
 
 **Por qué `reporte` y no `bloqueo`.** Juice Shop es vulnerable a propósito. Con 19 dependencias high o critical de línea base, el modo `bloqueo` dejaría el pipeline en rojo en cada push sin decir nada nuevo. En `reporte` los controles corren, publican sus reportes y el pipeline solo falla si una herramienta no puede ejecutarse. Los umbrales quedan escritos para el Hito 4: una corrección no debe sumar hallazgos sobre esta línea base.
 
+**Ejemplo de un build que el gate frenó.** Para verlo sin dejar los push en rojo, el workflow acepta una corrida manual con el gate en `bloqueo` (Actions → DevSecOps → Run workflow → `gate: bloqueo`). Con la misma línea base, esa corrida termina en rojo: el paso `Semgrep (gate)` falla por los hallazgos ERROR y `Auditoría (gate)` por las dependencias high y critical. Corrida: `DevSecOps #__` (manual, `bloqueo`). Los push siguen en `reporte`.
+
 **Uso de IA.** El workflow se adaptó con Claude (Anthropic, modelo Claude Fable 5.2) a partir de la plantilla del curso. Los comandos de SCA se probaron en local antes del push y los cuatro jobs corrieron en la corrida #1. El grupo revisa el diff antes de darlo por bueno.
 
 ## PoC del Equipo rojo

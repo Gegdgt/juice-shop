@@ -31,12 +31,18 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      gate:
+        description: "Modo del security gate"
+        type: choice
+        options: [reporte, bloqueo]
+        default: reporte
 
 permissions:
   contents: read
 
 env:
-  SECURITY_GATE: "reporte"
+  SECURITY_GATE: ${{ inputs.gate || 'reporte' }}
   # [Juice Shop] Mismas versiones que el Dockerfile y el CI original del proyecto.
   # Con npm 10 falla la generación del lockfile del frontend.
   NODE_VERSION: 24
